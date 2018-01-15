@@ -34,6 +34,7 @@ namespace PROProtocol
         public bool IsInBattle { get; private set; }
         public bool IsSurfing { get; private set; }
         public bool IsBiking { get; private set; }
+        public bool IsJetSkiing { get; private set; }
         public bool IsOnGround { get; private set; }
         public bool IsPCOpen { get; private set; }
         public bool CanUseCut { get; private set; }
@@ -343,7 +344,7 @@ namespace PROProtocol
 
                 if (_movements.Count == 0 && _surfAfterMovement)
                 {
-                    _movementTimeout.Set(Rand.Next(750, 2000));
+                    _movementTimeout.Set(IsJetSkiing ? 125 : Rand.Next(750, 2000));
                 }
             }
             if (!_movementTimeout.IsActive && _movements.Count == 0 && _surfAfterMovement)
@@ -954,6 +955,10 @@ namespace PROProtocol
             }
             if (pokemonUid == 0) // simple use
             {
+                if(item.Name.Contains("Jet-Skii"))
+                {
+
+                }
                 if (!_itemUseTimeout.IsActive && !IsInBattle && (item.Scope == 8 || item.Scope == 10 || item.Scope == 15))
                 {
                     SendUseItem(id);
@@ -1537,12 +1542,13 @@ namespace PROProtocol
 
         private void OnPlayerInfos(string[] data)
         {
-            string[] playerData = data[1].Split('|');
+            string[] playerData = data[1].Split(new string[] { "|" }, StringSplitOptions.None );
             PlayerName = playerData[0];
             PokedexOwned = Convert.ToInt32(playerData[4]);
             PokedexSeen = Convert.ToInt32(playerData[5]);
             PokedexEvolved = Convert.ToInt32(playerData[6]);
             IsMember = playerData[10] == "1";
+            OnJetSkiingUpdate(playerData[11]);
         }
 
         private void OnUpdateTime(string[] data)
@@ -1770,6 +1776,20 @@ namespace PROProtocol
             }
             _mountingTimeout.Set(Rand.Next(500, 1000));
             _itemUseTimeout.Cancel();
+        }
+
+        private void OnJetSkiingUpdate(string playerStyle)
+        {
+            string isSkiiStyle = playerStyle.Substring(2, 2);
+            if ((isSkiiStyle == "67" || isSkiiStyle == "59" || isSkiiStyle == "68" || isSkiiStyle == "69" || isSkiiStyle == "70" || isSkiiStyle == "71" || isSkiiStyle == "72" || isSkiiStyle == "73" || isSkiiStyle == "74" || isSkiiStyle == "75" || isSkiiStyle == "76" || isSkiiStyle == "77" || isSkiiStyle == "78"))
+            {
+                IsJetSkiing = true;
+            }
+            else
+            {
+                IsJetSkiing = false;
+            }
+            UpdateMovement();
         }
 
         private void OnSurfingUpdate(string[] data)

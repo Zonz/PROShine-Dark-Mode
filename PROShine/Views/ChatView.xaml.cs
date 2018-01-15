@@ -1130,9 +1130,6 @@ namespace PROShine
         private void AppendTextToRichTextBox(RichTextBox richTextBox,string author, string message)
         {
             //I have got a lot of trash codes here
-            bool gonZ = false;
-            if (message.Contains("Porygon-Z")) //Porygon-Z -> This Pokemon has one problem so checking does the chat contains this pokemon name
-                gonZ = true;
             int count = 0;
             Regex linkRg = new Regex(regexPattern);//Finding out is there any Pokemon link or not in Chat.
             MatchCollection linkMatch = linkRg.Matches(message);
