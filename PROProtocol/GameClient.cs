@@ -128,7 +128,7 @@ namespace PROProtocol
         public List<TradePokemon> Second_Trade;
         #endregion
 
-        private const string Version = "XMAS2017";
+        private const string Version = "2018";
 
         private GameConnection _connection;
         private DateTime _lastMovement;
