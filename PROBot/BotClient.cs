@@ -87,6 +87,7 @@ namespace PROBot
                 foreach (Invoker invoker in Script.Invokes)
                     invoker.Called = true;
             CallingPaueScript = false;
+            CallingRelog = false;
         }
         
         public void CallInvokes()

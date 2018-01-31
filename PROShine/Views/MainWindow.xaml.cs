@@ -761,7 +761,7 @@ namespace PROShine
                 {
                     if (Bot.Game.CreatingCharacter == true)
                     {
-                        if (MessageBox.Show(App.Name + " is creating character. So, should " + App.Name + " create Male or Female character?" + Environment.NewLine +
+                        if (MessageBox.Show(App.Name + " is creating a character. So, should " + App.Name + " create Male or Female character?" + Environment.NewLine +
                             "Yes = Male character." + Environment.NewLine + "No = Female character", "Creating Character!", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                         {
                             Bot.Game.CreatingCharacterMale = true;
