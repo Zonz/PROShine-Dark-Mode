@@ -469,7 +469,6 @@ namespace PROBot.Scripting
             LogMessage(message);
             Bot.Stop();
             Bot.LogoutAPI(allowAutoReconnector);
-            Bot.CancelInvokes();
         }
 
         // API return an array of all NPCs that can be challenged on the current map. format : {"npcName" = {"x" = x, "y" = y}}
