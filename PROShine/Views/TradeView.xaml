@@ -28,9 +28,9 @@
                         </Grid.RowDefinitions>
                         <TextBlock Name="First_nickname" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"/>
                         <TextBlock Name="Second_nickname" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center"/>
-                        <ListView Name="First_list"  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" 
+                        <ListView BorderBrush="#FF7289da" Name="First_list"  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" 
                                   BorderThickness="0" FontSize="13.333" Background="#FFDFE4EE" Foreground="#FF101020">
-                            <ListView.ItemContainerStyle>
+                <ListView.ItemContainerStyle>
                     <Style>
                         <Setter Property="ToolTipService.ShowDuration" Value="60000"/>
                         <Setter Property="Control.ToolTip">
@@ -159,7 +159,7 @@
                         </ListView>
 
                         <ListView Grid.Column="1" Grid.Row="1" Name="Second_list" Margin="5,0,5,0" HorizontalAlignment="Center" 
-                                  BorderThickness="0" FontSize="13.333" Background="#2c2f33" Foreground="#99aab5">
+                                  BorderThickness="0" FontSize="13.333" BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5">
                             <ListView.ItemContainerStyle>
                                 <Style>
                                     <Setter Property="ToolTipService.ShowDuration" Value="60000"/>
@@ -287,8 +287,8 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Background="#2c2f33" Foreground="#99aab5" Content="Accept" Click="acceptOnTrade_Click" Margin="0,0,5,0"/>
-                            <Button Grid.Column="1" Background="#2c2f33" Foreground="#99aab5" Content="Cancel" Click="cancelOnTrade_Click" Margin="5,0,0,0"/>
+                            <Button Grid.Column="0" BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5" Content="Accept" Click="acceptOnTrade_Click" Margin="0,0,5,0"/>
+                            <Button Grid.Column="1" BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5" Content="Cancel" Click="cancelOnTrade_Click" Margin="5,0,0,0"/>
                         </Grid>
                     </Grid>
                     <Grid Grid.Row="1" Margin="5" Name="TradeControls">
@@ -298,15 +298,15 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Background="#2c2f33" Foreground="#99aab5" Content="Cancel" MinWidth="60" Margin="0,0,5,0"  Click="cancelOnTrade_Click"/>
-                        <TextBox Grid.Column="1" Background="#2c2f33" Foreground="#99aab5" Name="Money" MinWidth="100" Margin="5,0,5,0" />
-                        <Button Grid.Column="2" Background="#2c2f33" Foreground="#99aab5" Content="Set"  MinWidth="40" Margin="5,0,5,0" Click="setTradeInfos_Click"/>
-                        <Button Grid.Column="3" Background="#2c2f33" Foreground="#99aab5" Content="Accept" MinWidth="75" Margin="5,0,0,0" Click="acceptOnTrade_Click"/>
+                        <Button Grid.Column="0" BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5" Content="Cancel" MinWidth="60" Margin="0,0,5,0"  Click="cancelOnTrade_Click"/>
+                        <TextBox Grid.Column="1" BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5" Name="Money" MinWidth="100" Margin="5,0,5,0" />
+                        <Button Grid.Column="2" BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5" Content="Set"  MinWidth="40" Margin="5,0,5,0" Click="setTradeInfos_Click"/>
+                        <Button Grid.Column="3" BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5" Content="Accept" MinWidth="75" Margin="5,0,0,0" Click="acceptOnTrade_Click"/>
                     </Grid>
                 </Grid>
 
                 <StackPanel Name="WaitingTrade">
-                    <fa:FontAwesome Icon="Spinner" VerticalAlignment="Center" Spin="True" Foreground="#99aab5"/>
+                    <fa:FontAwesome Icon="Spinner" VerticalAlignment="Center" Spin="True" Foreground="#FF7289da"/>
                     <TextBlock Text="Waiting on a trade request.." HorizontalAlignment="Center" Foreground="#99aab5"/>
                     <TextBlock Text="You can type '/trade &lt;name>' in the chat to start one yourself." Foreground="#99aab5"/>
                 </StackPanel>
@@ -320,8 +320,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Background="#2c2f33" Foreground="#99aab5" Grid.Column="0" Content="Accept" Click="AcceptTrade_Click" Margin="0,0,5,0"/>
-                        <Button Background="#2c2f33" Foreground="#99aab5" Grid.Column="1" Content="Cancel" Click="Cancel_Click" Margin="5,0,0,0"/>
+                        <Button BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5" Grid.Column="0" Content="Accept" Click="AcceptTrade_Click" Margin="0,0,5,0"/>
+                        <Button BorderBrush="#FF7289da" Background="#2c2f33" Foreground="#99aab5" Grid.Column="1" Content="Cancel" Click="Cancel_Click" Margin="5,0,0,0"/>
                     </Grid>
                 </StackPanel>
 

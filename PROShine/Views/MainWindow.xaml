@@ -118,6 +118,7 @@
             </Style.Triggers>
         </Style>
 
+
         <Style x:Key="SwitchStyle" TargetType="{x:Type CheckBox}">
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
@@ -126,24 +127,31 @@
                     <ControlTemplate TargetType="{x:Type CheckBox}">
                         <ControlTemplate.Resources>
                             <Storyboard x:Key="OnChecking">
-                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider"
+                                                               Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
                                     <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="30" />
                                 </DoubleAnimationUsingKeyFrames>
                             </Storyboard>
                             <Storyboard x:Key="OnUnchecking">
-                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider"
+                                                               Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
                                     <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0" />
                                 </DoubleAnimationUsingKeyFrames>
                             </Storyboard>
                         </ControlTemplate.Resources>
                         <DockPanel x:Name="dockPanel">
-                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" ContentTemplate="{TemplateBinding ContentTemplate}" RecognizesAccessKey="True" VerticalAlignment="Center" />
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              Content="{TemplateBinding Content}"
+                                              ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              RecognizesAccessKey="True" VerticalAlignment="Center" />
                             <Grid>
-                                <Border x:Name="BackgroundBorder" BorderBrush="#FF939393" BorderThickness="1" CornerRadius="9" Height="20" Width="60">
+                                <Border x:Name="BackgroundBorder" BorderBrush="#FF7289da" BorderThickness="1"
+                                        CornerRadius="9" Height="20" Width="55">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <GradientStop Color="#FFB5B5B5" Offset="0" />
-                                            <GradientStop Color="#FFFEFEFE" Offset="1" />
+                                            <GradientStop Color="#FF23272a" Offset="0" />
+                                            <GradientStop Color="#FF23272a" Offset="1" />
                                         </LinearGradientBrush>
                                     </Border.Background>
                                     <Grid>
@@ -151,11 +159,15 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Name="On" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="ON" />
-                                        <TextBlock Name="Off" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="OFF" />
+                                        <TextBlock Name="On" Grid.Column="0" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" Text="ON" />
+                                        <TextBlock Name="Off" Grid.Column="1" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" Text="Off" />
                                     </Grid>
                                 </Border>
-                                <Border BorderBrush="#FF939393" HorizontalAlignment="Left" x:Name="slider" Width="29" Height="29" BorderThickness="1" CornerRadius="20" RenderTransformOrigin="0.5,0.5" Margin="0">
+                                <Border BorderBrush="#FF23272a" HorizontalAlignment="Left" x:Name="slider" Width="25"
+                                        Height="25" BorderThickness="1" CornerRadius="90"
+                                        RenderTransformOrigin="0.5,0.5" Margin="0">
                                     <Border.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform ScaleX="1" ScaleY="1" />
@@ -166,9 +178,9 @@
                                     </Border.RenderTransform>
                                     <Border.Background>
                                         <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                            <GradientStop Color="#FF525556" Offset="0" />
-                                            <GradientStop Color="#FF4C6FA0" Offset="0.1" />
-                                            <GradientStop Color="#FF525556" Offset="1" />
+                                            <GradientStop Color="#FF7289da" Offset="0" />
+                                            <GradientStop Color="#FF2c2f33" Offset="0.1" />
+                                            <GradientStop Color="#FF7289da" Offset="1" />
                                         </LinearGradientBrush>
                                     </Border.Background>
                                 </Border>
@@ -177,13 +189,17 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Trigger.ExitActions>
-                                    <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard" />
+                                    <BeginStoryboard Storyboard="{StaticResource OnUnchecking}"
+                                                     x:Name="OnUnchecking_BeginStoryboard" />
                                 </Trigger.ExitActions>
                                 <Trigger.EnterActions>
-                                    <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard" />
+                                    <BeginStoryboard Storyboard="{StaticResource OnChecking}"
+                                                     x:Name="OnChecking_BeginStoryboard" />
                                 </Trigger.EnterActions>
-                                <Setter TargetName="BackgroundBorder" Property="Background" Value="{StaticResource CheckedBlue}" />
-                                <Setter TargetName="BackgroundBorder" Property="BorderBrush" Value="{StaticResource CheckedBlueBorder}" />
+                                <Setter TargetName="BackgroundBorder" Property="Background"
+                                        Value="{StaticResource CheckedBlue}" />
+                                <Setter TargetName="BackgroundBorder" Property="BorderBrush"
+                                        Value="{StaticResource CheckedBlueBorder}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -199,7 +215,7 @@
             <RowDefinition Height="0" Name="row1"/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" Background="#FF1F2225" HorizontalAlignment="Stretch">
-            <Menu BorderBrush="{x:Null}" IsMainMenu="True" Background="#FF1F2225" Foreground="#99aab5" FontSize="13.333">
+            <Menu BorderBrush="#FF7289da" IsMainMenu="True" Background="#FF1F2225" Foreground="#FF7289da" FontSize="13.333">
                 <MenuItem BorderBrush="{x:Null}" Header="Connection" Foreground="#99aab5" Background="#FF1F2225">
                     <MenuItem BorderBrush="{x:Null}" Name="LoginMenuItem" Header="Login" Click="LoginMenuItem_Click" Background="#2c2f33" Foreground="#99aab5"/>
                     <MenuItem BorderBrush="{x:Null}" Name="LogoutMenuItem" Header="Logout" Click="LogoutMenuItem_Click" IsEnabled="False" Background="#2c2f33" />
@@ -209,19 +225,19 @@
                     <MenuItem BorderBrush="{x:Null}" Name="BotStopMenuItem" Header="Stop" IsEnabled="False" Click="BotStopMenuItem_Click" Background="#2c2f33" />
                     <Separator BorderBrush="{x:Null}" Background="White" />
                     <MenuItem BorderBrush="{x:Null}" Name="MenuPathScript" Header="Script: None" Click="MenuPathScript_Click" Background="#2c2f33" Foreground="#99aab5"/>
+                    <Separator />
+                    <MenuItem BorderBrush="{x:Null}" Header="Show Log View" Background="#2c2f33" Name="HideLOGVIEW" Foreground="#99aab5" Click="HideLOGVIEW_Click"/>
                 </MenuItem>
                 <MenuItem BorderBrush="{x:Null}" Header="Help" Foreground="#99aab5" Click="MenuItem_Click">
                     <MenuItem BorderBrush="{x:Null}" Header="Community (Forum)" Click="MenuForum_Click" Background="#2c2f33" Foreground="#99aab5" />
                     <MenuItem BorderBrush="{x:Null}" Header="Source code (GitHub)" Click="MenuGitHub_Click" Background="#2c2f33" Foreground="#99aab5"/>
-                    <MenuItem BorderBrush="{x:Null}" Header="Donate (Patreon)" Click="MenuDonate_Click" Background="#2c2f33" Foreground="#99aab5"/>
+                    <MenuItem BorderBrush="{x:Null}"  Header="Donate (Patreon)" Click="MenuDonate_Click" Background="#2c2f33" Foreground="#99aab5"/>
                     <Separator BorderBrush="{x:Null}" Background="White"/>
                     <MenuItem BorderBrush="{x:Null}" Header="About" Click="MenuAbout_Click" Background="#2c2f33" Foreground="#99aab5"/>
-                    <Separator />
-                    <MenuItem BorderBrush="{x:Null}" Header="Show Log View" Background="#2c2f33" Name="HideLOGVIEW" Foreground="#99aab5" Click="HideLOGVIEW_Click"/>
                 </MenuItem>
             </Menu>
-            <DockPanel Background="#FF1F2225" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8,2">
-                <TextBox TextWrapping="Wrap" Width="Auto" Text="Pokemon Name" VerticalAlignment="Center" Name="pokedexData" Background="#2c2f33" Foreground="#99aab5"/>
+            <DockPanel Background="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8,2">
+                <TextBox BorderBrush="#FF7289da" TextWrapping="Wrap" Width="Auto" Text="Pokemon Name" VerticalAlignment="Center" Name="pokedexData" Background="#2c2f33" Foreground="#99aab5"/>
                 <Button BorderBrush="{x:Null}" Name="PokedexData_Button" Content="Get Data" Width="Auto" VerticalAlignment="Center" Background="#FF1F2225" Foreground="#99aab5" Click="PokedexData_Button_Click"/>
                 <Button BorderBrush="{x:Null}" Content="Clear Data" VerticalAlignment="Center" Background="#FF1F2225" Foreground="#99aab5" Click="Button_Click_2"/>
                 <Button BorderBrush="{x:Null}" Background="#FF1F2225" BorderThickness="0" Click="Button_Click">
@@ -282,22 +298,22 @@
         <WrapPanel Grid.Row="1" Background="#FF1F2225" VerticalAlignment="Center" Margin="4, 2, 4, 2">
             <Button BorderBrush="{x:Null}" x:Name="LoginButton" Margin="2,1,2,1" Background="#FF1F2225" Foreground="#FF101020" Click="LoginButton_Click">
                 <Button.Content>
-                    <fa:FontAwesome Name="LoginButtonIcon"  Foreground="#99aab5" Icon="SignIn" Padding="2, 2, 2, 2" FontSize="16"/>
+                    <fa:FontAwesome Name="LoginButtonIcon"  Foreground="#FF7289da" Icon="SignIn" Padding="2, 2, 2, 2" FontSize="16"/>
                 </Button.Content>
             </Button>
             <Button BorderBrush="{x:Null}" x:Name="StartScriptButton" Margin="2,1,2,1" Background="#FF1F2225" Foreground="#FF101020" Click="StartScriptButton_Click">
                 <Button.Content>
-                    <fa:FontAwesome Name="StartScriptButtonIcon"  Foreground="#99aab5" Icon="Play" Padding="2, 2, 2, 2" FontSize="16"/>
+                    <fa:FontAwesome Name="StartScriptButtonIcon"  Foreground="#FF7289da" Icon="Play" Padding="2, 2, 2, 2" FontSize="16"/>
                 </Button.Content>
             </Button>
             <Button BorderBrush="{x:Null}" x:Name="StopScriptButton" Margin="2,1,2,1" Background="#FF1F2225" Foreground="#FF101020" Click="StopScriptButton_Click">
                 <Button.Content>
-                    <fa:FontAwesome Name="StopScriptButtonIcon" Foreground="#99aab5" Icon="Stop" Padding="2, 2, 2, 2" FontSize="16"/>
+                    <fa:FontAwesome Name="StopScriptButtonIcon" Foreground="#FF7289da" Icon="Stop" Padding="2, 2, 2, 2" FontSize="16"/>
                 </Button.Content>
             </Button>
             <Button BorderBrush="{x:Null}" x:Name="LoadScriptButton" Margin="2,1,2,1" Background="#FF1F2225" Foreground="#FF101020" Click="LoadScriptButton_Click">
                 <Button.Content>
-                    <fa:FontAwesome Name="LoadScriptButtonIcon" Foreground="#99aab5" Icon="Folder" Padding="2, 2, 2, 2" FontSize="16"/>
+                    <fa:FontAwesome Name="LoadScriptButtonIcon" Foreground="#FF7289da" Icon="Folder" Padding="2, 2, 2, 2" FontSize="16"/>
                 </Button.Content>
             </Button>
             <CheckBox x:Name="AutoEvolveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="Auto-evolve: " Checked="AutoEvolveSwitch_Checked" Unchecked="AutoEvolveSwitch_Unchecked" Foreground="#99aab5" Background="White">
@@ -364,10 +380,10 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <CheckBox x:Name="IsTrainerBattlesActiveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="Npc-KO: " Checked="IsTrainerBattlesActiveSwitch_Checked" Unchecked="IsTrainerBattlesActiveSwitch_Unchecked" IsChecked="True" Foreground="#99aab5">
+            <CheckBox x:Name="IsTrainerBattlesActiveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="NPC-Battle: " Checked="IsTrainerBattlesActiveSwitch_Checked" Unchecked="IsTrainerBattlesActiveSwitch_Unchecked" IsChecked="True" Foreground="#99aab5">
                 <CheckBox.ToolTip>
                     <ToolTip Background="#2c2f33">
-                        <TextBlock Background="#2c2f33" Foreground="#99aab5"><Run Text="Fights NPC Like a Normal Player."/></TextBlock>
+                        <TextBlock Background="#2c2f33" Foreground="#99aab5"><Run Text="Enables/Disables to battle with NPC"/></TextBlock>
                     </ToolTip>
                 </CheckBox.ToolTip>
             </CheckBox>
@@ -390,7 +406,9 @@
                     <ToggleButton BorderBrush="{x:Null}" Name="TeamButton" Grid.Row="0" Margin="1" Background="#2c2f33" Foreground="#99aab5">
                         <ToggleButton.Content>
                             <StackPanel>
-                                <fa:FontAwesome Icon="Paw" Foreground="#99aab5" FontSize="15" Margin="4,1,4,1" />
+                                <iconPacks:PackIconMaterial Kind="Pokeball" Foreground="#FF7289da" FontSize="15"
+                                                            Margin="4,1,4,1" VerticalAlignment="Center"
+                                                            HorizontalAlignment="Center" />
                                 <TextBlock Text="Team" Margin="4,1,4,1" Foreground="#99aab5"/>
                             </StackPanel>
                         </ToggleButton.Content>
@@ -398,7 +416,7 @@
                     <ToggleButton BorderBrush="{x:Null}" Name="InventoryButton" Grid.Row="1" Margin="1" Background="#2c2f33" Foreground="#99aab5">
                         <ToggleButton.Content>
                             <StackPanel>
-                                <fa:FontAwesome Icon="Suitcase" Foreground="#99aab5" FontSize="15" Margin="4,1,4,1" />
+                                <fa:FontAwesome Icon="Suitcase" Foreground="#FF7289da" FontSize="15" Margin="4,1,4,1" />
                                 <TextBlock Text="Inventory" Margin="4,1,4,1" Foreground="#99aab5" />
                             </StackPanel>
                         </ToggleButton.Content>
@@ -406,7 +424,7 @@
                     <ToggleButton BorderBrush="{x:Null}" Name="ChatButton" Grid.Row="2" Margin="1" Background="#2c2f33" Foreground="White">
                         <ToggleButton.Content>
                             <StackPanel>
-                                <fa:FontAwesome Icon="Comment" Foreground="#99aab5" FontSize="15" Margin="4,1,4,1" />
+                                <fa:FontAwesome Icon="Comment" Foreground="#FF7289da" FontSize="15" Margin="4,1,4,1" />
                                 <TextBlock Text="Chat" Margin="4,1,4,1" Foreground="#99aab5" />
                             </StackPanel>
                         </ToggleButton.Content>
@@ -414,7 +432,7 @@
                     <ToggleButton BorderBrush="{x:Null}" Name="PlayersButton" Grid.Row="3" Margin="1" Background="#2c2f33" Foreground="White">
                         <ToggleButton.Content>
                             <StackPanel>
-                                <fa:FontAwesome Icon="Users" Foreground="#99aab5" FontSize="15" Margin="4,1,4,1" />
+                                <fa:FontAwesome Icon="Users" Foreground="#FF7289da" FontSize="15" Margin="4,1,4,1" />
                                 <TextBlock Text="Players" Margin="4,1,4,1" Foreground="#99aab5" />
                             </StackPanel>
                         </ToggleButton.Content>
@@ -422,7 +440,9 @@
                     <ToggleButton BorderBrush="{x:Null}" Name="MapButton" Grid.Row="4" Margin="1" Background="#2c2f33" Foreground="White">
                         <ToggleButton.Content>
                             <StackPanel>
-                                <fa:FontAwesome Icon="Cube"  Foreground="#99aab5" FontSize="15" Margin="4,1,4,1" />
+                                <iconPacks:PackIconFontAwesome Kind="Globe" Foreground="#FF7289da" FontSize="15"
+                                                               Margin="4,1,4,1" VerticalAlignment="Center"
+                                                               HorizontalAlignment="Center" />
                                 <TextBlock Text="Map" Margin="4,1,4,1" Foreground="#99aab5" />
                             </StackPanel>
                         </ToggleButton.Content>
@@ -430,7 +450,7 @@
                     <ToggleButton Name="TradeButton" Grid.Row="5" Margin="1" Background="#2c2f33" Foreground="White" BorderBrush="{x:Null}">
                         <ToggleButton.Content>
                             <StackPanel>
-                                <fa:FontAwesome Icon="Exchange"  Foreground="#99aab5" FontSize="15" Margin="4,1,4,1" />
+                                <fa:FontAwesome Icon="Exchange"  Foreground="#FF7289da" FontSize="15" Margin="4,1,4,1" />
                                 <TextBlock Text="Trade" Margin="4,1,4,1" Foreground="#99aab5" />
                             </StackPanel>
                         </ToggleButton.Content>
@@ -446,7 +466,8 @@
                 <ContentControl Name="TradeContent" />
             </Grid>
         </Grid>
-        <GridSplitter Name="GridS" ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="4" Grid.Row="3" Background="Transparent"/>
+        <GridSplitter ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="4"
+                      Grid.Row="3" Background="#FF99aab5" />
         <Grid Name="GridLogView" Grid.Row="3" Margin="4">
             <RichTextBox Name="MessageTextBox"
                      Background="#FF1F2225"
@@ -462,8 +483,8 @@
                 </RichTextBox.Resources>
             </RichTextBox>
         </Grid>
-        <controls:Flyout BorderBrush="{x:Null}" CloseButtonVisibility="Collapsed" Header="Pokedex"  Name="FlayoutDex" Position="Right" Width="342" Margin="0,2.6,-0.4,-0.6" Grid.Row="2" Background="#2c2f33" Foreground="#99aab5" Grid.RowSpan="2" controls:ControlsHelper.HeaderFontWeight="Black">
-            <ListView BorderBrush="{x:Null}" Name="PokedexList" Height="454" Margin="0,0,-0.6,0" Width="Auto" Background="#2c2f33" Foreground="#99aab5">
+        <controls:Flyout BorderBrush="{x:Null}" CloseButtonVisibility="Collapsed" Header="Pokedex"  Name="FlayoutDex" Position="Right" Width="342" Margin="0,2.6,-0.4,-0.6" Grid.Row="2" Background="#2c2f33" Foreground="#FF7289da" Grid.RowSpan="2" controls:ControlsHelper.HeaderFontWeight="Black">
+            <ListView BorderBrush="{x:Null}" Name="PokedexList" Height="454" Margin="0,0,-0.6,0" Width="Auto" Background="#2c2f33" Foreground="#FF7289da">
                 <ListView.View>
                     <GridView x:Name="MainGrid">
                         <GridViewColumn x:Name="Area" Width="Auto" Header="#Map" DisplayMemberBinding="{Binding Area_Name}"/>

@@ -1089,6 +1089,7 @@ namespace PROShine
         private void MenuGitHub_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("https://github.com/Silv3rPRO/proshine");
+            Process.Start("https://github.com/PreciousTrainer/PROShine-Dark-Mode");
         }
 
         private void MenuDonate_Click(object sender, RoutedEventArgs e)
