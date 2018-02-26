@@ -21,6 +21,8 @@ using FontAwesome.WPF;
 using System.Windows.Documents;
 using MahApps.Metro.Controls;
 using System.Linq;
+using System.Windows.Interop;
+using System.Media;
 
 namespace PROShine
 {
@@ -55,8 +57,6 @@ namespace PROShine
 
         private ObservableCollection<OptionSlider> _sliderOptions;
         private ObservableCollection<TextOption> _textOptions;
-        private static List<string> PokeLinks;
-        private static List<string> PokeName;
         public MainWindow()
         {
 #if !DEBUG
@@ -80,6 +80,7 @@ namespace PROShine
             Bot.SliderRemoved += Bot_SliderRemoved;
             Bot.TextboxCreated += Bot_TextboxCreated;
             Bot.TextboxRemoved += Bot_TextboxRemoved;
+            Bot.PlayShoutNotification += PlayShoutNotification;
 
             InitializeComponent();
             AutoReconnectSwitch.IsChecked = Bot.AutoReconnector.IsEnabled;
@@ -121,21 +122,34 @@ namespace PROShine
             SpawnList.Children.Add(Name);
             TextBlock time = new TextBlock();
             time.Foreground = Brushes.OrangeRed;
-            time.Text = "??";
+            time.Text = string.Format("Time: {0}, {1}", "??", "?");
             Time.Children.Add(time);
             TextBlock money1 = new TextBlock();
             money1.Foreground = Brushes.OrangeRed;
-            money1.Text = "?";
+            money1.Text = string.Format("Money: {0}", "?");
             toolTipMoney.Children.Add(money1);
             TextBlock money2 = new TextBlock();
             money2.Foreground = Brushes.OrangeRed;
-            money2.Text = "?";
+            money2.Text = string.Format("Money: {0}", "?");
             toolTipMoney2.Children.Add(money2);
-
-            PokeLinks = new List<string>();
-            PokeName = new List<string>();
         }
+        private void PlayShoutNotification()
+        {
+            Window mainWindow = GetWindow(this);
+            if (!mainWindow.IsActive || !mainWindow.IsVisible)
+            {
+                IntPtr handle = new WindowInteropHelper(mainWindow).Handle;
+                FlashWindowHelper.Flash(handle);
 
+                if (File.Exists("Assets/shout.wav"))
+                {
+                    using (SoundPlayer player = new SoundPlayer("Assets/shout.wav"))
+                    {
+                        player.Play();
+                    }
+                }
+            }
+        }
         private void Bot_ColorMessageLogged(string message, Brush color)
         {
             Dispatcher.InvokeAsync(delegate
@@ -515,7 +529,7 @@ namespace PROShine
                 LogMessage("Authenticated successfully!", Brushes.SeaGreen);
                 UpdateBotMenu();
                 StatusText.Text = "Online";
-                StatusText.Foreground = Brushes.Green;
+                StatusText.Foreground = Brushes.SeaGreen;
             });
         }
 
@@ -633,6 +647,7 @@ namespace PROShine
             {
                 if (Bot.Game != null)
                 {
+                    //login
                     Bot.Game.LoggedIn += Client_LoggedIn;
                     Bot.Game.AuthenticationFailed += Client_AuthenticationFailed;
                     Bot.Game.QueueUpdated += Client_QueueUpdated;
@@ -652,7 +667,7 @@ namespace PROShine
                     Bot.Game.PrivateMessage += Chat.Client_PrivateMessage;
                     Bot.Game.LeavePrivateMessage += Chat.Client_LeavePrivateMessage;
                     Bot.Game.RefreshChannelList += Chat.Client_RefreshChannelList;
-                    //
+                    //system/character
                     Bot.Game.SystemMessage += Client_SystemMessage;
                     Bot.Game.PlayerAdded += Client_PlayerAdded;
                     Bot.Game.PlayerUpdated += Client_PlayerUpdated;
@@ -716,7 +731,6 @@ namespace PROShine
                         else
                         {
                             StatusText.Text += queueTimeLeft.Value.ToString(@"mm\:ss");
-
                         }
                         StatusText.Text += " left";
                     }
@@ -743,13 +757,17 @@ namespace PROShine
         {
             Dispatcher.InvokeAsync(delegate
             {
-                IList<Pokemon> team;
                 lock (Bot)
                 {
-                    team = Bot.Game.Team.ToArray();
+                    if (Bot.Game != null)
+                    {
+                        IList<Pokemon> team;
+
+                        team = Bot.Game.Team.ToArray();
+                        Team.PokemonsListView.ItemsSource = team;
+                        Team.PokemonsListView.Items.Refresh();
+                    }
                 }
-                Team.PokemonsListView.ItemsSource = team;
-                Team.PokemonsListView.Items.Refresh();
             });
         }
         //Creating Random Male or Female character lol.
@@ -813,11 +831,11 @@ namespace PROShine
                 var bc = new BrushConverter();
                 TextBlock MoneyAmount = new TextBlock();
                 MoneyAmount.Foreground = (Brush)bc.ConvertFrom("#99aab5");
-                MoneyAmount.Text = money;
+                MoneyAmount.Text = string.Format("Money: {0}", money);
                 toolTipMoney.Children.Add(MoneyAmount);
                 TextBlock moneyAmount = new TextBlock();
                 moneyAmount.Foreground = (Brush)bc.ConvertFrom("#99aab5");
-                moneyAmount.Text = money;
+                moneyAmount.Text = string.Format("Money: {0}", money);
                 toolTipMoney2.Children.Add(moneyAmount);
                 Inventory.ItemsListView.ItemsSource = items;
                 Inventory.ItemsListView.Items.Refresh();
@@ -897,7 +915,7 @@ namespace PROShine
                             TextBlock Name = new TextBlock();
                             Name.Foreground = (Brush)bc.ConvertFrom("#99aab5");
                             Name.Background = (Brush)bc.ConvertFrom("#2c2f33");
-                            Name.Text = "Night.";
+                            Name.Text = string.Format("Time: {0}, {1}", pokeTime, "Night");
                             d.Children.Add(Name);
                             PokeTimeIconName.Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.WeatherNight;
                             Time.Children.Add(d);
@@ -908,14 +926,14 @@ namespace PROShine
                             Name.Foreground = (Brush)bc.ConvertFrom("#99aab5");
                             Name.Background = (Brush)bc.ConvertFrom("#2c2f33");
                             PokeTimeIconName.Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.WeatherSunny;
-                            Name.Text = "Day.";
+                            Name.Text = string.Format("Time: {0}, {1}", pokeTime, "Day");
                             d.Children.Add(Name);
                             Time.Children.Add(d);
                         }
                         if (dt.Hour >= 4 && dt.Hour < 10)
                         {
                             TextBlock Name = new TextBlock();
-                            Name.Text = "Morning.";
+                            Name.Text = string.Format("Time: {0}, {1}", pokeTime, "Morning");
                             Name.Foreground = (Brush)bc.ConvertFrom("#99aab5");
                             Name.Background = (Brush)bc.ConvertFrom("#2c2f33");
                             PokeTimeIconName.Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.WeatherSunsetUp;
@@ -977,7 +995,7 @@ namespace PROShine
             LogMessage("System: " + message, Brushes.SeaGreen);
         }
 
-        public static void AppendLineToTextBox(RichTextBox richTextBox, string message)
+        public static void AppendLineToRichTextBox(RichTextBox richTextBox, string message)
         {
             Paragraph para;
             TextRange r = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
@@ -985,9 +1003,8 @@ namespace PROShine
 #if DEBUG
                 Console.WriteLine(t.Length.ToString());
 #endif
-            if (t.Length > 2)
+            if (t.Length > 0)
             {
-               
                 para = new Paragraph();
                 para.Margin = new Thickness(0);
             }
@@ -1000,23 +1017,7 @@ namespace PROShine
             para.Inlines.Add(new Run(message));
 
             richTextBox.Document.Blocks.Add(para);
-            //string test = new TextRange(textBox.Document.ContentEnd, textBox.Document.ContentEnd).Text;
-            //if (test.Length > 12000)
-            //{
-            //    string text = new TextRange(textBox.Document.ContentEnd, textBox.Document.ContentEnd).Text;
-            //    text = text.Substring(text.Length - 10000, 10000);
-            //    int index = text.IndexOf(Environment.NewLine);
-            //    if (index != -1)
-            //    {
-            //        text = text.Substring(index + Environment.NewLine.Length);
-            //    }
-            //    textBox.Document.Blocks.Clear();
-            //    Paragraph newPara = new Paragraph();
-            //    newPara = textBox.Document.Blocks.FirstBlock as Paragraph;
-            //    newPara.LineHeight = 10;
-            //    newPara.Inlines.Add(new Run(text + Environment.NewLine));             
-            //    textBox.Document.Blocks.Add(newPara);
-            //}
+
             TextRange range = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd);
             if (range.Text.Length > 12000)
             {
@@ -1053,29 +1054,6 @@ namespace PROShine
                 richTextBox.ScrollToEnd();
             }
         }
-        public static void AppendLineToRichTextBox(RichTextBox richTextBox, string message)
-        {
-            string richText = new TextRange(richTextBox.Document.ContentStart, richTextBox.Document.ContentEnd).Text;
-            richTextBox.AppendText(message);
-            richTextBox.AppendText("\n");
-            if (richText.Length > 12000)
-            {
-                string text = richText;
-                text = text.Substring(text.Length - 10000, 10000);
-                int index = text.IndexOf(Environment.NewLine);
-                if (index != -1)
-                {
-                    text = text.Substring(index + Environment.NewLine.Length);
-                }
-                richTextBox.Document.Blocks.Clear();
-                richTextBox.Document.Blocks.Add(new Paragraph(new Run(text + "\n")));
-            }
-            if (richTextBox.Selection.IsEmpty)
-            {
-                richTextBox.CaretPosition = richTextBox.Document.ContentEnd;
-                richTextBox.ScrollToEnd();
-            }
-        }
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(App.Name + " version " + App.Version + ", by " + App.Author + "." + Environment.NewLine + App.Description, App.Name + " - About");
@@ -1088,8 +1066,8 @@ namespace PROShine
 
         private void MenuGitHub_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/Silv3rPRO/proshine");
             Process.Start("https://github.com/PreciousTrainer/PROShine-Dark-Mode");
+            Process.Start("https://github.com/Silv3rPRO/proshine");
         }
 
         private void MenuDonate_Click(object sender, RoutedEventArgs e)
@@ -1266,7 +1244,7 @@ namespace PROShine
                         }
                         if (pkmn.hitem)
                         {
-                            i.Icon = FontAwesomeIcon.Wrench;
+                            i.Icon = FontAwesomeIcon.Percent;
                             d.Children.Add(i);
                             i.Foreground = Brushes.Goldenrod;
                         }
@@ -1289,7 +1267,7 @@ namespace PROShine
         {
             lock (Bot)
             {
-                Dispatcher.Invoke(() =>
+                Dispatcher.InvokeAsync(delegate
                 {
                     if (Bot.Game.getAreaName.Count > 0 && Bot.Game.isMS.Count > 0 && Bot.Game.timeZone.Count > 0)
                     {
@@ -1303,7 +1281,7 @@ namespace PROShine
                 });
             }
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Collapse_Button_Click(object sender, RoutedEventArgs e)
         {
             if (CollapseIcon.Icon.Equals(FontAwesomeIcon.AngleDoubleUp))
             {
@@ -1328,16 +1306,16 @@ namespace PROShine
         //To hide log messages or to show.
         private void HideLOGVIEW_Click(object sender, RoutedEventArgs e)
         {
-            if (HideLOGVIEW.Header.Equals("Show Log View"))
+            if (HideorShowLOGVIEW.Header.ToString().StartsWith("Show"))
             {
-                row1.Height = new GridLength(1, GridUnitType.Star);
+                logWindow.Height = new GridLength(1, GridUnitType.Star);
                 Height = 600;
-                HideLOGVIEW.Header = "Hide Log View";
+                HideorShowLOGVIEW.Header = "Hide Log View";
             }
             else
             {
-                row1.Height = new GridLength(0);
-                HideLOGVIEW.Header = "Show Log View";
+                logWindow.Height = new GridLength(0);
+                HideorShowLOGVIEW.Header = "Show Log View Normally";
                 Height = 600;
             }
         }
@@ -1362,19 +1340,14 @@ namespace PROShine
                     {
                         Bot.Game.AskForPokedex();
                         var bc = new BrushConverter();
-                        LogMessage("Data didn't receive, may be you haven't seen the pokemon. Or Wait for a second and try again", (Brush)bc.ConvertFrom("#FF99AAB5"));
+                        LogMessage("Data didn't receive, may be you haven't seen the pokemon. Or Wait for sometime and try again", (Brush)bc.ConvertFrom("#FF99AAB5"));
                     }
                 }
                 FlayoutDex.IsOpen = true;
             }
         }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        //clearing pokemon dex informations
+        private void PokedexDataClear_Button_Click(object sender, RoutedEventArgs e)
         {
             FlayoutDex.IsOpen = false;
             if (Bot.Game != null)

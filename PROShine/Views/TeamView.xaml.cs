@@ -173,7 +173,7 @@ namespace PROShine
             lock (_bot)
             {
                 InventoryItem item = _bot.Game.Items.Find(i => i.Name == itemName);
-                _bot.Game.UseItem(item.Id ,pokemon.Uid);
+                _bot.Game.UseItem(item.Id, pokemon.Uid);
             }
         }
 

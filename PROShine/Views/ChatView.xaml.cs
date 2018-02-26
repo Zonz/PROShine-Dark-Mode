@@ -33,7 +33,7 @@ namespace PROShine
         public List<string> messagesAfterLink;
         public List<string> messagesAfterLinkTest = new List<string>();
 
-        private const string regexPattern = @"\[([\dMF?,]+)\]<([\-\s\w]+)>\[-\]";
+        private const string regexPattern = @"\[([\dMF?,]+)\]<([\.\-\s\w]+)>\[-\]";
 
         public ChatView(BotClient bot)
         {
@@ -70,18 +70,21 @@ namespace PROShine
                 {
                     channelList = _bot.Game.Channels.ToArray();
                 }
-                foreach (ChatChannel channel in channelList)
+                if (channelList.Count > 0 || channelList != null)
                 {
-                    if (!_channelTabs.ContainsKey(channel.Name))
+                    foreach (ChatChannel channel in channelList)
                     {
-                        AddChannelTab(channel.Name);
+                        if (!_channelTabs.ContainsKey(channel.Name))
+                        {
+                            AddChannelTab(channel.Name);
+                        }
                     }
-                }
-                foreach (string key in _channelTabs.Keys.ToArray())
-                {
-                    if (!(channelList.Any(e => e.Name == key)))
+                    foreach (string key in _channelTabs.Keys.ToArray())
                     {
-                        RemoveChannelTab(key);
+                        if (!(channelList.Any(e => e.Name == key)))
+                        {
+                            RemoveChannelTab(key);
+                        }
                     }
                 }
             });
@@ -330,12 +333,6 @@ namespace PROShine
                 {
                     Console.WriteLine(ex.Message);
                 }
-#if DEBUG
-                Console.WriteLine(updateUser1);
-                Console.WriteLine(updateUser2);
-                Console.WriteLine(position);
-                Console.WriteLine(link);
-#endif
             }
             message = Regex.Replace(message, @"\[.+?\]", "");
 
@@ -350,7 +347,7 @@ namespace PROShine
 
             if (!containsChatPoke)
             {
-                MainWindow.AppendLineToTextBox((_channelTabs[channelName].Content as ChatPanel).ChatBox,
+                MainWindow.AppendLineToRichTextBox((_channelTabs[channelName].Content as ChatPanel).ChatBox,
                         "[" + DateTime.Now.ToLongTimeString() + "] " + author + ": " + message);
                 pokeName.Clear();
                 PokeLinks.Clear();
@@ -369,7 +366,7 @@ namespace PROShine
                 AddChannelTab(channelName);
             }
 
-            MainWindow.AppendLineToTextBox((_channelTabs[channelName].Content as ChatPanel).ChatBox,
+            MainWindow.AppendLineToRichTextBox((_channelTabs[channelName].Content as ChatPanel).ChatBox,
                 "[" + DateTime.Now.ToLongTimeString() + "] SYSTEM: " + message);
 
             //(_channelTabs[channelName].Content as ChatPanel).ChatBox.AppendText(
@@ -461,12 +458,6 @@ namespace PROShine
                 {
                     Console.WriteLine(ex.Message);
                 }
-#if DEBUG
-                Console.WriteLine(updateUser1);
-                Console.WriteLine(updateUser2);
-                Console.WriteLine(position);
-                Console.WriteLine(link);
-#endif
             }
             message = Regex.Replace(message, @"\[.+?\]", "");
 
@@ -481,7 +472,7 @@ namespace PROShine
 
             if (!containsChatPoke)
             {
-                MainWindow.AppendLineToTextBox((_channelPmTabs[conversation].Content as ChatPanel).ChatBox,
+                MainWindow.AppendLineToRichTextBox((_channelPmTabs[conversation].Content as ChatPanel).ChatBox,
                         "[" + DateTime.Now.ToLongTimeString() + "] " + author + ": " + message);
                 pokeName.Clear();
                 PokeLinks.Clear();
@@ -601,18 +592,12 @@ namespace PROShine
                 {
                     Console.WriteLine(ex.Message);
                 }
-#if DEBUG
-                Console.WriteLine(updateUser1);
-                Console.WriteLine(updateUser2);
-                Console.WriteLine(position);
-                Console.WriteLine(link);
-#endif
             }
             message = Regex.Replace(message, @"\[.+?\]", "");           
 
             if (!containsChatPoke)
             {
-                MainWindow.AppendLineToTextBox((_localChatTab.Content as ChatPanel).ChatBox,
+                MainWindow.AppendLineToRichTextBox((_localChatTab.Content as ChatPanel).ChatBox,
                        "[" + DateTime.Now.ToLongTimeString() + "] " + author + ": "+ message);
                 PokeLinksLocal.Clear();
                 pokeNameLocal.Clear();
@@ -626,7 +611,7 @@ namespace PROShine
                 author = "[" + mode + "]" + author;
             }
 
-            MainWindow.AppendLineToTextBox((_localChatTab.Content as ChatPanel).ChatBox,
+            MainWindow.AppendLineToRichTextBox((_localChatTab.Content as ChatPanel).ChatBox,
                 "[" + DateTime.Now.ToLongTimeString() + "] " + author + " is " + ChatEmotes.GetDescription(emoteId));
 
             //(_localChatTab.Content as ChatPanel).ChatBox.AppendText("[" + DateTime.Now.ToLongTimeString() + "] " + author + " is " + ChatEmotes.GetDescription(emoteId) + '\r');
@@ -717,12 +702,6 @@ namespace PROShine
                 {
                     Console.WriteLine(ex.Message);
                 }
-#if DEBUG
-                Console.WriteLine(updateUser1);
-                Console.WriteLine(updateUser2);
-                Console.WriteLine(position);
-                Console.WriteLine(link);
-#endif
             }
             message = Regex.Replace(message, @"\[.+?\]", "");
 
@@ -737,7 +716,7 @@ namespace PROShine
 
             if (!containsChatPoke)
             {
-                MainWindow.AppendLineToTextBox((_pmTabs[conversation].Content as ChatPanel).ChatBox,
+                MainWindow.AppendLineToRichTextBox((_pmTabs[conversation].Content as ChatPanel).ChatBox,
                         "[" + DateTime.Now.ToLongTimeString() + "] " + author + ": " + message);
                 pokeName.Clear();
                 PokeLinks.Clear();
@@ -831,12 +810,6 @@ namespace PROShine
                 {
                     Console.WriteLine(ex.Message);
                 }
-#if DEBUG
-                Console.WriteLine(updateUser1);
-                Console.WriteLine(updateUser2);
-                Console.WriteLine(position);
-                Console.WriteLine(link);
-#endif
             }
             message = Regex.Replace(message, @"\[.+?\]", "");
 
@@ -850,7 +823,7 @@ namespace PROShine
             }
             if (!containsChatPoke)
             {
-                MainWindow.AppendLineToTextBox((_pmTabs[conversation].Content as ChatPanel).ChatBox,
+                MainWindow.AppendLineToRichTextBox((_pmTabs[conversation].Content as ChatPanel).ChatBox,
                         "[" + DateTime.Now.ToLongTimeString() + "] " + author + " " + message);
                 pokeName.Clear();
                 PokeLinks.Clear();

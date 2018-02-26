@@ -11,10 +11,10 @@
                      Title="MainWindow" Height="600" Width="850" Background="#FF1F2225" Foreground="#99aab5" Icon="../logo.ico" FontSize="13.333" AllowDrop="True" Drop="MainWindow_OnDrop">
     <Window.Resources>
         <LinearGradientBrush x:Key="CheckedBlue" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#FFb5c3da" Offset="0" />
-            <GradientStop Color="#FFC3CFE1" Offset="1" />
+            <GradientStop Color="#FF7289da" Offset="0" />
+            <GradientStop Color="#FF2c2f33" Offset="1" />
         </LinearGradientBrush>
-        <SolidColorBrush x:Key="CheckedBlueBorder" Color="#FF909CAE" />
+
         <LinearGradientBrush x:Key="GridViewColumnHeaderBackground" EndPoint="0,1" StartPoint="0,0">
             <GradientStop Color="#FFFFFFFF" Offset="0"/>
             <GradientStop Color="#FFFFFFFF" Offset="0.4091"/>
@@ -117,8 +117,8 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-
+        
+        <SolidColorBrush x:Key="CheckedBlueBorder" Color="#FF7289da" />
         <Style x:Key="SwitchStyle" TargetType="{x:Type CheckBox}">
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
@@ -162,7 +162,7 @@
                                         <TextBlock Name="On" Grid.Column="0" HorizontalAlignment="Center"
                                                    VerticalAlignment="Center" Text="ON" />
                                         <TextBlock Name="Off" Grid.Column="1" HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center" Text="Off" />
+                                                   VerticalAlignment="Center" Text="OFF" />
                                     </Grid>
                                 </Border>
                                 <Border BorderBrush="#FF23272a" HorizontalAlignment="Left" x:Name="slider" Width="25"
@@ -212,7 +212,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="2*" />
-            <RowDefinition Height="0" Name="row1"/>
+            <RowDefinition Height="Auto" Name="logWindow"/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" Background="#FF1F2225" HorizontalAlignment="Stretch">
             <Menu BorderBrush="#FF7289da" IsMainMenu="True" Background="#FF1F2225" Foreground="#FF7289da" FontSize="13.333">
@@ -226,7 +226,7 @@
                     <Separator BorderBrush="{x:Null}" Background="White" />
                     <MenuItem BorderBrush="{x:Null}" Name="MenuPathScript" Header="Script: None" Click="MenuPathScript_Click" Background="#2c2f33" Foreground="#99aab5"/>
                     <Separator />
-                    <MenuItem BorderBrush="{x:Null}" Header="Show Log View" Background="#2c2f33" Name="HideLOGVIEW" Foreground="#99aab5" Click="HideLOGVIEW_Click"/>
+                    <MenuItem BorderBrush="{x:Null}" Header="Show Log View Normally" Background="#2c2f33" Name="HideorShowLOGVIEW" Foreground="#99aab5" Click="HideLOGVIEW_Click"/>
                 </MenuItem>
                 <MenuItem BorderBrush="{x:Null}" Header="Help" Foreground="#99aab5" Click="MenuItem_Click">
                     <MenuItem BorderBrush="{x:Null}" Header="Community (Forum)" Click="MenuForum_Click" Background="#2c2f33" Foreground="#99aab5" />
@@ -238,9 +238,9 @@
             </Menu>
             <DockPanel Background="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8,2">
                 <TextBox BorderBrush="#FF7289da" TextWrapping="Wrap" Width="Auto" Text="Pokemon Name" VerticalAlignment="Center" Name="pokedexData" Background="#2c2f33" Foreground="#99aab5"/>
-                <Button BorderBrush="{x:Null}" Name="PokedexData_Button" Content="Get Data" Width="Auto" VerticalAlignment="Center" Background="#FF1F2225" Foreground="#99aab5" Click="PokedexData_Button_Click"/>
-                <Button BorderBrush="{x:Null}" Content="Clear Data" VerticalAlignment="Center" Background="#FF1F2225" Foreground="#99aab5" Click="Button_Click_2"/>
-                <Button BorderBrush="{x:Null}" Background="#FF1F2225" BorderThickness="0" Click="Button_Click">
+                <Button BorderBrush="#FF7289da" Name="PokedexData_Button" Content="Get Data" Width="Auto" VerticalAlignment="Center" Background="#FF1F2225" Foreground="#99aab5" Click="PokedexData_Button_Click"/>
+                <Button BorderBrush="#FF7289da" Content="Clear Data" VerticalAlignment="Center" Background="#FF1F2225" Foreground="#99aab5" Click="PokedexDataClear_Button_Click"/>
+                <Button BorderBrush="{x:Null}" Background="#FF1F2225" BorderThickness="0" Click="Collapse_Button_Click">
                     <fa:FontAwesome Icon="AngleDoubleUp" Name="CollapseIcon" Foreground="#99aab5" />
                 </Button>
                 <TextBlock Name="StatusIcon" Foreground="#FF101020" FontSize="15" Margin="8,2,2,2" VerticalAlignment="Center">
@@ -271,11 +271,13 @@
                     </TextBlock.ToolTip>
                 </TextBlock>
                 <TextBlock Name="PlayerPositionIcon" Foreground="#FF101020" FontSize="15" Margin="8,2,2,2" VerticalAlignment="Center">
-                    <fa:FontAwesome Icon="Compass" VerticalAlignment="Center" Foreground="#99aab5" />
+                    <iconPacks:PackIconMaterial Kind="MapMarkerRadius" VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" Foreground="#99aab5"/>
                 </TextBlock>
                 <TextBlock Name="PlayerPositionText" Text="(?,?)" Margin="2,2,2,2" VerticalAlignment="Center" Foreground="#99aab5"/>
                 <TextBlock Name="MoneyIcon" Foreground="#FF101020" FontSize="15" Margin="8,4,2,2" VerticalAlignment="Center">
-                    <fa:FontAwesome Icon="Rub" VerticalAlignment="Center" Foreground="#99aab5"/>
+                     <iconPacks:PackIconMaterial Kind="CurrencyBtc" VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" Foreground="#99aab5"/>
                     <TextBlock.ToolTip>
                         <ToolTip Background="#2c2f33">
                             <Grid>
@@ -316,21 +318,21 @@
                     <fa:FontAwesome Name="LoadScriptButtonIcon" Foreground="#FF7289da" Icon="Folder" Padding="2, 2, 2, 2" FontSize="16"/>
                 </Button.Content>
             </Button>
-            <CheckBox x:Name="AutoEvolveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="Auto-evolve: " Checked="AutoEvolveSwitch_Checked" Unchecked="AutoEvolveSwitch_Unchecked" Foreground="#99aab5" Background="White">
+            <CheckBox x:Name="AutoEvolveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="Auto-evolve: " Checked="AutoEvolveSwitch_Checked" Unchecked="AutoEvolveSwitch_Unchecked" Foreground="#FF99aab5" Background="White">
                 <CheckBox.ToolTip>
                     <ToolTip Background="#2c2f33">
                         <TextBlock Background="#2c2f33" Foreground="#99aab5">Always evolve a pokemon if on else not going to evolve a pokemon.</TextBlock>
                     </ToolTip>
                 </CheckBox.ToolTip>
             </CheckBox>
-            <CheckBox x:Name="AvoidStaffSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="Staff evader: " Checked="AvoidStaffSwitch_Checked" Unchecked="AvoidStaffSwitch_Unchecked" Foreground="#99aab5">
+            <CheckBox x:Name="AvoidStaffSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="Staff evader: " Checked="AvoidStaffSwitch_Checked" Unchecked="AvoidStaffSwitch_Unchecked" Foreground="#FF99aab5">
                 <CheckBox.ToolTip>
                     <ToolTip Background="#2c2f33">
                         <TextBlock Background="#2c2f33" Foreground="#99aab5">Disconnect when a staff member appears on the map. Disable the Auto-reconnect (only works if the admin is not invisible).</TextBlock>
                     </ToolTip>
                 </CheckBox.ToolTip>
             </CheckBox>
-            <CheckBox x:Name="AutoReconnectSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="Auto-reconnect: " Checked="AutoReconnectSwitch_Checked" Unchecked="AutoReconnectSwitch_Unchecked" Foreground="#99aab5">
+            <CheckBox x:Name="AutoReconnectSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="Auto-reconnect: " Checked="AutoReconnectSwitch_Checked" Unchecked="AutoReconnectSwitch_Unchecked" Foreground="#FF99aab5">
                 <CheckBox.ToolTip>
                     <ToolTip Background="#2c2f33">
                         <TextBlock Background="#2c2f33" Foreground="#99aab5">Reconnect after a few minutes and start the last script.</TextBlock>
@@ -380,7 +382,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <CheckBox x:Name="IsTrainerBattlesActiveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="NPC-Battle: " Checked="IsTrainerBattlesActiveSwitch_Checked" Unchecked="IsTrainerBattlesActiveSwitch_Unchecked" IsChecked="True" Foreground="#99aab5">
+            <CheckBox x:Name="IsTrainerBattlesActiveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="NPC-Battle: " Checked="IsTrainerBattlesActiveSwitch_Checked" Unchecked="IsTrainerBattlesActiveSwitch_Unchecked" IsChecked="True" Foreground="#FF99aab5">
                 <CheckBox.ToolTip>
                     <ToolTip Background="#2c2f33">
                         <TextBlock Background="#2c2f33" Foreground="#99aab5"><Run Text="Enables/Disables to battle with NPC"/></TextBlock>

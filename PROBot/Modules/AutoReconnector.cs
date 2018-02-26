@@ -25,7 +25,8 @@ namespace PROBot.Modules
         }
 
         private BotClient _bot;
-        private bool _reconnecting;
+        public bool _reconnecting;
+        public bool RelogCalled { get; set; }
         private DateTime _autoReconnectTimeout;
 
         public AutoReconnector(BotClient bot)
@@ -60,7 +61,7 @@ namespace PROBot.Modules
 
         private void Client_ConnectionClosed(Exception ex)
         {
-            if (IsEnabled)
+            if (IsEnabled && !RelogCalled)
             {
                 _reconnecting = true;
                 int seconds = _bot.Rand.Next(MinDelay, MaxDelay + 1);

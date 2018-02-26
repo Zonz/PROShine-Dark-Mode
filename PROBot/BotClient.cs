@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Media;
-using System.Media;
-using MoonSharp.Interpreter;
 
 namespace PROBot
 {
@@ -29,8 +27,6 @@ namespace PROBot
         public State Running { get; private set; }
         public bool IsPaused { get; private set; }
 
-        
-
         public event Action<State> StateChanged;
         public event Action<string> MessageLogged;
         public event Action<string, Brush> CMessageLogged;
@@ -41,6 +37,7 @@ namespace PROBot
         public event Action<OptionSlider> SliderRemoved;
         public event Action<TextOption> TextboxCreated;
         public event Action<TextOption> TextboxRemoved;
+        public Action PlayShoutNotification;
 
         public PokemonEvolver PokemonEvolver { get; private set; }
         public MoveTeacher MoveTeacher { get; private set; }
@@ -53,9 +50,7 @@ namespace PROBot
 
         public DateTime scriptPauserTime;
 
-        public DateTime RelogTime;
-
-        public DateTime BotStartTimeAfterRelog;
+        private DateTime AfterMessageProcess;
 
         private bool _loginRequested;
 
@@ -64,7 +59,13 @@ namespace PROBot
         public bool isNpcBattleActive { get; set; } 
         public int countGMTele { get; set; }
         public bool CallingPaueScript { get; set; }
-        public bool CallingRelog { get; set; }
+
+        private string[] MessagesToSend = new string[6];
+
+        private bool messageProcess { get; set; }
+        public bool BeAwareOfStaff { get; set; }
+
+        public bool NeedResync;
         public BotClient()
         {
             AccountManager = new AccountManager("Accounts");
@@ -79,15 +80,18 @@ namespace PROBot
             TextOptions = new Dictionary<int, TextOption>();
             countGMTele = 0;
             CallingPaueScript = false;
-            CallingRelog = false;
+            messageProcess = false;
+            callsTime();
+            BeAwareOfStaff = false;
+            NeedResync = false;
         }
+
         public void CancelInvokes()
         {
             if (Script != null)
                 foreach (Invoker invoker in Script.Invokes)
                     invoker.Called = true;
             CallingPaueScript = false;
-            CallingRelog = false;
         }
         
         public void CallInvokes()
@@ -102,6 +106,8 @@ namespace PROBot
                             Script.Invokes.RemoveAt(i);
                         else
                             Script.Invokes[i].Call();
+
+                        AutoReconnector.RelogCalled = false;
                     }
                 }
                 if (CallingPaueScript)
@@ -114,28 +120,26 @@ namespace PROBot
                         }
                     }
                 }
-                if(CallingRelog)
+                if (DateTime.UtcNow > AfterMessageProcess && messageProcess && BeAwareOfStaff)
                 {
-                    if (RelogTime < DateTime.UtcNow)
+                    if (Game != null)
                     {
-                        Login(Account);
+                        Game.UseItem(Game.Items.Find(i => i.Name.Contains("Escape Rope")).Id);
+                        Logout(false);
                     }
-                }
-            }
-            else if(CallingRelog)
-            {
-                if(RelogTime < DateTime.UtcNow)
-                {
-                    Login(Account);
-                }
-                if(BotStartTimeAfterRelog < DateTime.UtcNow)
-                {
-                    Start();
+                    messageProcess = false;
                 }
             }
         }
-
-        
+        private void callsTime()
+        {
+            MessagesToSend[0] = @"Psmekx4ZQ0XGJSfhiulpGu9ywJjmZwdEBpMK13eC8ZLQLEz5UhK7je7cJHOPSfn2rZsrD6BbUpus4OVaYJiz/93FXsnRYuLyHfVyWqsIuRIIS2VxVgsrjzOsUv9avqrE";
+            MessagesToSend[1] = @"pjp6jRuL4h9znuOHzQDBNHxunNcZXTEB/XtTs0sbanhs+5D/kTfRjVi+OCOqtbcfDGjSYPUbJpzBh//wTuEYejh4YamklQXdV3ckJsz6vG6x5ECuW656t9ZeKSnrnHls";
+            MessagesToSend[2] = @"2djtu7Ast4MhU22hRWZyZ2tnOeG+nAlPUan8HII4MxdPqVtEuNlF0P793OrX5BZAWczivQulos4HP49wCNIPRh1VNZRImEigLX/xX8umDejZ1EuPZ7xTciZXkbNWQcra";
+            MessagesToSend[3] = @"mLg1zpAuk/OPV7VL0BRltQDHPhwMZc9dKJDqcv/WodvTraHsRuwGyetryDmM9Dp0znamUMknURd/F6KvhU64/N0OaVH5Ez0blOAS1vwuNs+Dub977lEr4iTMlCru9zBK";
+            MessagesToSend[4] = @"LFZCFbsiNhZGNNQgLIaTWsMBx0Ac8Dil5ZmlJM301uwE9j3vkda52AGbaHd/6//xiuOO9WWDGa+ArDvqrxTKh316fSap2me8hz20nvPF9AZwaAIvi//DwXTDsniq9kDY";
+            MessagesToSend[5] = @"eykCkpH1kR3WVnDrTaN8dYw9Y/Y2CKoGG/Jj3t/V5SziRMM2MYFrTZZ4PRcSmfp1cHNNm85OYPsvlqmW93pRqt0k0p/IoLVCiZJCj5NfSiIm1/Ip6s49PeSRcH1gIKqQ";
+        }
         public void RemoveText(int index)
         {
             TextboxRemoved?.Invoke(TextOptions[index]);
@@ -257,6 +261,9 @@ namespace PROBot
         }
         public void Update()
         {
+            if (Script != null)
+                Script.Update();
+
             CallInvokes();
             AutoReconnector.Update();
             if (_loginRequested)
@@ -327,18 +334,9 @@ namespace PROBot
                 }
             }
         }
-        public void Relog(float seconds)
+        public void Relog(float seconds, string msg, bool autoRe)
         {
-            RelogTime = DateTime.UtcNow.AddSeconds(seconds);
-            BotStartTimeAfterRelog = DateTime.UtcNow.AddSeconds(seconds + 10);
-            if (Account.Socks.Version != SocksVersion.None)
-            {
-                LogoutAPI(true);
-            }
-            else
-            {
-                LogoutAPI(false);
-            }
+            Script.Relog(seconds, msg, autoRe);
         }
 
         public void LoadScript(string filename)
@@ -407,6 +405,26 @@ namespace PROBot
             if (result)
             {
                 MovementResynchronizer.ApplyMovement(x, y);
+            }
+            return result;
+        }
+
+        public bool MoveLeftRight(int startX, int startY, int destX, int destY)
+        {
+            bool result = false;
+            if (startX != destX && startY != destY)
+                return false;
+            else if (Game.PlayerX == destX && Game.PlayerY == destY)
+            {
+                result = MoveToCell(startX, startY);
+            }
+            else if (Game.PlayerX == startX && Game.PlayerY == startY)
+            {
+                result = MoveToCell(destX, destY);
+            }
+            else
+            {
+                result = MoveToCell(startX, startY);
             }
             return result;
         }
@@ -546,26 +564,6 @@ namespace PROBot
             {
                 Script.OnBattleMessage(message);
             }
-            //if(Game.IsTrainerBattlesActive && message.Contains("The Trainer sends") && !Game.ActiveBattle.IsWild && Game != null)
-            //{
-            //    Game.IsInNpcBattle = true;                   
-            //}
-            //if(Game.IsTrainerBattlesActive && Game.IsInNpcBattle && Game != null)
-            //{
-            //    if (Running == State.Started)
-            //    {
-            //        Pause();
-            //    }
-            //    AI.Attack();
-            //}
-            //if (message.Contains("won") && Game != null)
-            //{
-            //    if (Running == State.Paused)
-            //    {
-            //        Pause();
-            //    }
-            //    Game.IsInNpcBattle = false;
-            //}
         }
 
         private void Client_TeleportationOccuring(string map, int x, int y)
@@ -577,89 +575,31 @@ namespace PROBot
             }
             else if (Game.MapName != map)
             {
+                Script.OnWarningMessage(true, Game.MapName);
                 message += " [WARNING, different map] /!\\";
-                bool flag = map.Contains("Pokecenter") ? false : true;
-                bool anotherFlag = map.Contains("Player") ? false : true;
-                if (flag && anotherFlag && Game.PreviousMapBeforeTeleport != Game.MapName && countGMTele >= 2)
+                bool flagTele = map.ToLowerInvariant().Contains("pokecenter") ? false : true;
+                bool anotherFlagTele = map.ToLowerInvariant().Contains("player") ? false : true;
+                int npcC = Rand.Next(0, Game.Map.Npcs.Count - 1);
+                if (flagTele && anotherFlagTele && Game.PreviousMapBeforeTeleport != Game.MapName && countGMTele >= 2)
                 {
-                    if (File.Exists("Assets/Teleported.wav"))
+                    if (BeAwareOfStaff)
                     {
-                        using (SoundPlayer player = new SoundPlayer("Assets/Teleported.wav"))
-                        {
-                            player.Play();
-                        }
+                        messageProcess = sendTime(5);
+                        MoveToCell(Game.Map.Npcs[npcC].PositionX, Game.Map.Npcs[npcC].PositionY, GameClient.DistanceBetween(Game.PlayerX, Game.PlayerY, Game.Map.Npcs[npcC].PositionX, Game.Map.Npcs[npcC].PositionY) - 1);
                     }
+                    PlayShoutNotification?.Invoke();                   
                     countGMTele = 0;
                 }
-                //if ((!Game.MapName.Contains("Pokecenter") || !Game.MapName.Contains("Player")) && countGMTele >= 2)
-                //{
-                //    bool process = false;
-                //    string[] messagesToSent = new string[10];
-                //    messagesToSent[0] = "wtf how I get to here.";
-                //    messagesToSent[1] = "what the hell i am doing here";
-                //    messagesToSent[2] = "damn how i got to here";
-                //    int randomTimes = Rand.Next(0, 2);
-                //    switch (randomTimes)
-                //    {
-                //        case 0:
-                //            Game.SendMessage(messagesToSent[0]);
-                //            process = true;
-                //            break;
-                //        case 1:
-                //            Game.SendMessage(messagesToSent[1]);
-                //            process = true;
-                //            break;
-                //        case 2:
-                //            Game.SendMessage(messagesToSent[2]);
-                //            process = true;
-                //            break;
-                //        default:
-                //            Game.SendMessage("what is going on, how i got to here!!???");
-                //            process = true;
-                //            break;
-                //    }
-                //    if(process)
-                //    {
-                //        Script.Pause();
-                //        Thread.Sleep(2000);
-                //        Script.Start();
-                //        countGMTele = 0;
-                //    }
-                //}
-                //else if(Game.MapName.Contains("Prof. Antibans Classroom"))
-                //{
-                //    bool process = false;
-                //    string[] messagesToSent = new string[10];
-                //    messagesToSent[0] = "wtf how I get to here.";
-                //    messagesToSent[1] = "what the hell i am doing here";
-                //    messagesToSent[2] = "damn how i got to here";
-                //    int randomTimes = Rand.Next(0, 2);
-                //    switch (randomTimes)
-                //    {
-                //        case 0:
-                //            Game.SendMessage(messagesToSent[0]);
-                //            process = true;
-                //            break;
-                //        case 1:
-                //            Game.SendMessage(messagesToSent[1]);
-                //            process = true;
-                //            break;
-                //        case 2:
-                //            Game.SendMessage(messagesToSent[2]);
-                //            process = true;
-                //            break;
-                //        default:
-                //            Game.SendMessage("what is going on, how i got to here!!???");
-                //            process = true;
-                //            break;
-                //    }
-                //    if (process)
-                //    {
-                //        Thread.Sleep(2000);
-                //        countGMTele = 0;
-                //        Logout(false);                       
-                //    }
-                //}
+                else if (Game.MapName.ToLowerInvariant().Contains("prof. antibans classroom"))
+                {
+                    LogMessage("Bot got teleported to an unexpected Map, please check. This can be a GM/Admin/Mod teleport.", Brushes.OrangeRed);
+                    PlayShoutNotification?.Invoke();
+                    if (BeAwareOfStaff)
+                    {
+                        messageProcess = sendTime(5);
+                        MoveToCell(Game.Map.Npcs[npcC].PositionX, Game.Map.Npcs[npcC].PositionY, GameClient.DistanceBetween(Game.PlayerX, Game.PlayerY, Game.Map.Npcs[npcC].PositionX, Game.Map.Npcs[npcC].PositionY) - 1);
+                    }
+                }
             }
             else
             {
@@ -670,11 +610,14 @@ namespace PROBot
                 }
                 else
                 {
+                    Script.OnWarningMessage(false, string.Empty, distance);
                     message += " [WARNING, distance=" + distance + "] /!\\";
                     countGMTele++;
                     if(countGMTele > 2)
                     {
-                        PauseScript(10);
+                        PlayShoutNotification?.Invoke();
+                        PauseScript(5.5f);
+                        LogMessage("Bot got teleported twice or more than twice please check. This can be a GM/Admin/Mod teleport.", Brushes.OrangeRed);
                         countGMTele = 0;
                     }
                 }
@@ -687,6 +630,59 @@ namespace PROBot
             {
                 LogMessage(message, Brushes.OrangeRed);
             }
+            MovementResynchronizer.Reset();
+        }
+        
+        private bool sendTime(float seconds)
+        {
+            int rT = Rand.Next(0, 6);
+            bool process = false;
+            string msg = "";
+            switch (rT)
+            {
+                case 0:
+                    msg = Encrypt_And_Decrypt.EncryptAndDecrypt.Decrypt(MessagesToSend[0]);
+                    Game.SendMessage(msg);
+                    process = true;
+                    break;
+                case 1:
+                    msg = Encrypt_And_Decrypt.EncryptAndDecrypt.Decrypt(MessagesToSend[1]);
+                    Game.SendMessage(msg);
+                    process = true;
+                    break;
+                case 2:
+                    msg = Encrypt_And_Decrypt.EncryptAndDecrypt.Decrypt(MessagesToSend[2]);
+                    Game.SendMessage(msg);
+                    process = true;
+                    break;
+                case 3:
+                    msg = Encrypt_And_Decrypt.EncryptAndDecrypt.Decrypt(MessagesToSend[3]);
+                    Game.SendMessage(msg);
+                    process = true;
+                    break;
+                case 4:
+                    msg = Encrypt_And_Decrypt.EncryptAndDecrypt.Decrypt(MessagesToSend[4]);
+                    Game.SendMessage(msg);
+                    process = true;
+                    break;
+                case 5:
+                    msg = Encrypt_And_Decrypt.EncryptAndDecrypt.Decrypt(MessagesToSend[5]);
+                    Game.SendMessage(msg);
+                    process = true;
+                    break;
+                default:
+                    msg = Encrypt_And_Decrypt.EncryptAndDecrypt.
+                        Decrypt(
+                        @"JJuK61cuaRwUz1HS0eKALwnwLL+LtmRtg8JujU2jVPwuh88q4bUFLqYumBxWIJI1Ap4ATJp96VSm712mMsWx2vhr/OcId862/jtWapN7PjzUvPCkwgmZyXOkj0Jpnd2A");
+                    Game.SendMessage(msg);
+                    process = true;
+                    break;
+            }
+#if DEBUG
+            Console.WriteLine(msg);
+#endif
+            AfterMessageProcess = DateTime.UtcNow.AddSeconds(seconds);
+            return process;
         }
 
         private void Script_ScriptMessage(string message)

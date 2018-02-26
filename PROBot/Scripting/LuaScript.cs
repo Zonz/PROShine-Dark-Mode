@@ -64,6 +64,10 @@ namespace PROBot.Scripting
         {
             CallFunctionSafe("onResume");
         }
+        public override void Update()
+        {
+            CallFunctionSafe("onUpdate");
+        }
 
         public override void OnDialogMessage(string message)
         {
@@ -84,7 +88,10 @@ namespace PROBot.Scripting
         {
             CallFunctionSafe("onLearningMove", moveName, pokemonIndex);
         }
-
+        public override void OnWarningMessage(bool isDifferentMap, string differentMapName = "", int distance = -1)
+        {
+            CallFunctionSafe("onWarningMessage", isDifferentMap, differentMapName, distance);
+        }
         public override bool ExecuteNextAction()
         {
             if (Bot.Game.IsInBattle && Bot.AI.UseMandatoryAction())
@@ -97,7 +104,10 @@ namespace PROBot.Scripting
             _actionExecuted = false;
             try
             {
-                CallFunction(functionName, true);
+                if (!Bot.Game.IsInBattle && Bot.NeedResync)
+                    MoveToNormalGround();
+                else
+                    CallFunction(functionName, true);
             }
             catch (ScriptRuntimeException ex)
             {
@@ -263,6 +273,8 @@ namespace PROBot.Scripting
             _lua.Globals["moveToCell"] = new Func<int, int, bool>(MoveToCell);
             _lua.Globals["moveToMap"] = new Func<string, bool>(MoveToMap);
             _lua.Globals["moveToRectangle"] = new Func<DynValue[], bool>(MoveToRectangle);
+            _lua.Globals["moveLinearX"] = new Func<DynValue[], bool>(MoveLinearX);
+            _lua.Globals["moveLinearY"] = new Func<DynValue[], bool>(MoveLinearY);
             _lua.Globals["setMount"] = new Func<string, bool>(SetMount);
             _lua.Globals["setWaterMount"] = new Func<string, bool>(SetWaterMount);
 
@@ -337,16 +349,23 @@ namespace PROBot.Scripting
             _lua.Globals["readLinesFromFile"] = new Func<string, string[]>(ReadLinesFromFile);
 
             _lua.Globals["login"] = new Action<string, string, string, int, string, int, string, string>(Login);
-            _lua.Globals["relog"] = new Action<float, string>(Relog);
+            _lua.Globals["relog"] = new Action<DynValue[]>(Relog);
             _lua.Globals["startScript"] = new Func<bool>(StartScript);
             _lua.Globals["invoke"] = new Action<DynValue, float, DynValue[]>(Invoke);
             _lua.Globals["cancelInvokes"] = new Action(CancelInvokes);
+            _lua.Globals["beAwareOfStaff"] = new Func<bool, bool>(BeAwareOfStaff);
 		
             foreach (string content in _libsContent)
             {
                 CallContent(content);
             }
             CallContent(_content);
+        }
+        //API: Awareness from staff
+        private bool BeAwareOfStaff(bool aware)
+        {
+            Bot.BeAwareOfStaff = aware;
+            return Bot.BeAwareOfStaff;
         }
 
         private void CallFunctionSafe(string functionName, params object[] args)
@@ -1551,6 +1570,103 @@ namespace PROBot.Scripting
             return ExecuteAction(Bot.MoveToCell(x, y));
         }
 
+        private bool MoveLinearX(params DynValue[] values)
+        {
+            if (values.Length != 1 && values.Length != 4 ||
+                (values.Length == 1 && values[0].Type != DataType.Table) ||
+                (values.Length == 4
+                    && (values[0].Type != DataType.Number || values[1].Type != DataType.Number
+                    || values[2].Type != DataType.Number || values[3].Type != DataType.Number)))
+            {
+                Fatal("error: moveToRectangle: must receive either a table or four numbers.");
+                return false;
+            }
+
+            if (values.Length == 1)
+            {
+                values = values[0].Table.Values.ToArray();
+            }
+
+            return MoveLinearX((int)values[0].Number, (int)values[1].Number, (int)values[2].Number, (int)values[3].Number);
+        }
+
+        private bool MoveLinearY(params DynValue[] values)
+        {
+            if (values.Length != 1 && values.Length != 4 ||
+                (values.Length == 1 && values[0].Type != DataType.Table) ||
+                (values.Length == 4
+                    && (values[0].Type != DataType.Number || values[1].Type != DataType.Number
+                    || values[2].Type != DataType.Number || values[3].Type != DataType.Number)))
+            {
+                Fatal("error: moveToRectangle: must receive either a table or four numbers.");
+                return false;
+            }
+
+            if (values.Length == 1)
+            {
+                values = values[0].Table.Values.ToArray();
+            }
+
+            return MoveLinearY((int)values[0].Number, (int)values[1].Number, (int)values[2].Number, (int)values[3].Number);
+        }
+        /// <summary>
+        /// Thanks to Atem(AlphaCentauritt) 
+        /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y"></param>
+        /// <param name="percentage"></param>
+        /// <returns></returns>
+        private bool MoveLinearX(int x1, int x2, int y , int percentage = -1)
+        {
+            int x = x1;
+            int xx2 = x2;
+            if (percentage != -1)
+            {
+                if (Bot.Rand.Next(1, percentage) == percentage)
+                {
+                    x = x1 + Bot.Rand.Next(1, 2);
+
+                    xx2 = x2 - Bot.Rand.Next(1, 2);
+                }
+            }
+            else
+            {
+                x = x1;
+                xx2 = x2;
+            }
+
+            return ExecuteAction(Bot.MoveLeftRight(x, y, xx2, y));
+        }
+        /// <summary>
+        /// Thanks to Atem(AlphaCentauritt) 
+        /// </summary>
+        /// <param name="y1"></param>
+        /// <param name="y2"></param>
+        /// <param name="x"></param>
+        /// <param name="percentage"></param>
+        /// <returns></returns>
+        private bool MoveLinearY(int y1, int y2, int x, int percentage = -1)
+        {
+            int y = y1;
+            int yy2 = y2;
+            if (percentage != -1)
+            {
+                if (Bot.Rand.Next(1, percentage) == percentage)
+                {
+                    y = y1 + Bot.Rand.Next(1, 2);
+
+                    yy2 = y2 - Bot.Rand.Next(1, 2);
+                }
+            }
+            else
+            {
+                y = y1;
+                yy2 = y2;
+            }
+
+            return ExecuteAction(Bot.MoveLeftRight(x, y, x, yy2));
+        }
         // API: Move randomly avoiding water and links.
         private bool MoveToNormalGround()
         {
@@ -2949,10 +3065,40 @@ namespace PROBot.Scripting
 
             Bot.Login(account);
         }
-
-        // API: Logs out and logs back in after the specified number of seconds, then starts the script shortly after
-        public void Relog(float seconds, string message)
+        public void Relog(params DynValue[] values)
         {
+            if (values.Length != 2 && values.Length != 3 ||
+                (values.Length == 1 && values[0].Type != DataType.Table) ||
+                (values.Length == 3
+                    && (values[0].Type != DataType.Number || values[1].Type != DataType.String
+                    || values[2].Type != DataType.Boolean)))
+            {
+                Fatal("error: Relog: must receive either one float/number and one string/message or one float, one string/message and one bool value \nor a table which contains these values.");
+                return;
+            }
+
+            if (values.Length == 1)
+            {
+                values = values[0].Table.Values.ToArray();
+            }
+            if (values.Length == 3)
+            {
+                Relog((float)values[0].Number, values[1].String, values[2].Boolean);
+            }
+            else
+            {
+                Relog((float)values[0].Number, values[1].String);
+            }
+        }
+        /// <summary>
+        /// Lua API for PROShine, it just logs out and relogs after given time. 
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <param name="message"></param>
+        /// <param name="autoReconnect"></param>
+        public override void Relog(float seconds, string message, bool autoReconnect = false)
+        {
+
             DynValue name = DynValue.NewString(Bot.Account.Name);
             DynValue password = DynValue.NewString(Bot.Account.Password);
             DynValue server = DynValue.NewString(Bot.Account.Server);
@@ -2972,16 +3118,32 @@ namespace PROBot.Scripting
             }
 
             Invoke(_lua.Globals.Get("startScript"), seconds + 10);
-            if (Bot.Account.Socks.Version != SocksVersion.None)
+            Bot.AutoReconnector._reconnecting = false;
+            Bot.AutoReconnector.RelogCalled = true;
+            if (!autoReconnect)
             {
-                LogoutAPI(message, true);
+                if (Bot.Account.Socks.Version != SocksVersion.None)
+                {
+                    LogoutAPI(message, true);
+                }
+                else
+                {
+                    LogoutAPI(message, false);
+                }
             }
             else
             {
-                LogoutAPI(message, false);
+                if (Bot.Account.Socks.Version != SocksVersion.None)
+                {
+                    LogoutAPI(message, autoReconnect);
+                }
+                else
+                {
+                    LogoutAPI(message, autoReconnect);
+                }
+
             }
         }
-        
         // API: Starts the loaded script (usable in the outer scope or with invoke)
         private bool StartScript()
         {

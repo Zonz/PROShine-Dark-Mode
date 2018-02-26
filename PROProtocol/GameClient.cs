@@ -128,7 +128,7 @@ namespace PROProtocol
         public List<TradePokemon> Second_Trade;
         #endregion
 
-        private const string Version = "2018";
+        private const string Version = "2018V";
 
         private GameConnection _connection;
         private DateTime _lastMovement;
@@ -2473,6 +2473,7 @@ namespace PROProtocol
             string type = tdata[0];
             if (type == "l")
             {
+                PokedexList.Clear();
                 string[] pdata = tdata[2].Split('<'); // Format now : PokemonID>StatusID
                 int num2 = Convert.ToInt32(tdata[1]);
                 for (int i = 0; i < pdata.Length; i++)
@@ -2495,178 +2496,181 @@ namespace PROProtocol
             }
             else if (type == "a")
             {
-                string[] ddata = tdata[2].Split('|');
-                int num = FindPokedexEntry(Convert.ToInt32(tdata[1]));
-                if (PokedexList[num].Area.Count > 0)
+                if (PokedexList.Count > 0)
                 {
-                    PokedexList[num].Area.Clear();
-                    getAreaName.Clear();
-                    isMS.Clear();
-                    timeZone.Clear();
-                }
-                string[] areadata = tdata[20].Split(new string[]
-                {
-                    "<"
-                }, StringSplitOptions.None);
-                for (int j = 0; j < areadata.Length; j++)
-                {
-                    PokedexList[num].Area.Add(areadata[j]);
-                }
-                for (int i = 0; i < PokedexList[num].Area.ToList().Count; i++)
-                {
-                    if (this.PokedexList[num].Area[i].Length > 2)
+                    string[] ddata = tdata[2].Split('|');
+                    int num = FindPokedexEntry(Convert.ToInt32(tdata[1]));
+                    if (PokedexList[num].Area.Count > 0)
                     {
-                        string text = TimeZoneIcon(PokedexList[num].Area[i].Substring(0, 1));
-                        if (PokedexList[num].Area[i].Substring(1, 1) == "1")
+                        PokedexList[num].Area.Clear();
+                        getAreaName.Clear();
+                        isMS.Clear();
+                        timeZone.Clear();
+                    }
+                    string[] areadata = tdata[20].Split(new string[]
+                    {
+                    "<"
+                    }, StringSplitOptions.None);
+                    for (int j = 0; j < areadata.Length; j++)
+                    {
+                        PokedexList[num].Area.Add(areadata[j]);
+                    }
+                    for (int i = 0; i < PokedexList[num].Area.ToList().Count; i++)
+                    {
+                        if (PokedexList[num].Area[i].Length > 2)
                         {
-                            getAreaName.Add(string.Concat(new string[]
+                            string text = TimeZoneIcon(PokedexList[num].Area[i].Substring(0, 1));
+                            if (PokedexList[num].Area[i].Substring(1, 1) == "1")
                             {
+                                getAreaName.Add(string.Concat(new string[]
+                                {
                                 PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                 "Land,",
                                 text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                 "MS No"
-                            }));
-                        }
-                        else if (PokedexList[num].Area[i].Substring(1, 1) == "2")
-                        {
-                            getAreaName.Add(string.Concat(new string[]
+                                }));
+                            }
+                            else if (PokedexList[num].Area[i].Substring(1, 1) == "2")
                             {
+                                getAreaName.Add(string.Concat(new string[]
+                                {
                                 PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                 "Water,",
                                 text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                 "MS No"
-                            }));
-                        }
-                        else if (PokedexList[num].Area[i].Substring(1, 1) == "3")
-                        {
-                            getAreaName.Add(string.Concat(new string[]
+                                }));
+                            }
+                            else if (PokedexList[num].Area[i].Substring(1, 1) == "3")
                             {
+                                getAreaName.Add(string.Concat(new string[]
+                                {
 
                                 PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                 "Land,Water,",
                                 text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                 "MS No"
-                            }));
-                        }
-                        else if (PokedexList[num].Area[i].Substring(1, 1) == "4")
-                        {
-                            getAreaName.Add(string.Concat(new string[]
+                                }));
+                            }
+                            else if (PokedexList[num].Area[i].Substring(1, 1) == "4")
                             {
+                                getAreaName.Add(string.Concat(new string[]
+                                {
                                 PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                 "Land,",
                                 text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                 "MS Yes"
-                            }));
-                        }
-                        else if (PokedexList[num].Area[i].Substring(1, 1) == "6")
-                        {
-                            getAreaName.Add(string.Concat(new string[]
+                                }));
+                            }
+                            else if (PokedexList[num].Area[i].Substring(1, 1) == "6")
                             {
+                                getAreaName.Add(string.Concat(new string[]
+                                {
                                  PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                  "Land,Water,",
                                  text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                  "MS Yes"
-                            }));
-                        }
-                        else if (PokedexList[num].Area[i].Substring(1, 1) == "7")
-                        {
-                            getAreaName.Add(string.Concat(new string[]
+                                }));
+                            }
+                            else if (PokedexList[num].Area[i].Substring(1, 1) == "7")
                             {
+                                getAreaName.Add(string.Concat(new string[]
+                                {
                                 PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                  "Water,",
                                   text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                 "MS Yes"
-                            }));
-                        }
-                        else if (PokedexList[num].Area[i].Substring(1, 1) == "8")
-                        {
-                            getAreaName.Add(string.Concat(new string[]
+                                }));
+                            }
+                            else if (PokedexList[num].Area[i].Substring(1, 1) == "8")
                             {
+                                getAreaName.Add(string.Concat(new string[]
+                                {
                                 PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                 "Land,Water,",
                                  text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                 "MS Yes"
-                            }));
-                        }
-                        else if (PokedexList[num].Area[i].Substring(1, 1) == "9")
-                        {
-                            getAreaName.Add(string.Concat(new string[]
+                                }));
+                            }
+                            else if (PokedexList[num].Area[i].Substring(1, 1) == "9")
                             {
+                                getAreaName.Add(string.Concat(new string[]
+                                {
                                  PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                 "Land,Water,",
                                  text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                 "MS Yes"
-                            }));
-                        }
-                        else
-                        {
-                            getAreaName.ToList().Add(string.Concat(new string[]
+                                }));
+                            }
+                            else
                             {
+                                getAreaName.ToList().Add(string.Concat(new string[]
+                                {
                                  PokedexList[num].Area[i].Substring(2),
-                            }));
-                            timeZone.Add(string.Concat(new string[]
-                            {
+                                }));
+                                timeZone.Add(string.Concat(new string[]
+                                {
                                 " ",
                                 text,
-                            }));
-                            isMS.Add(string.Concat(new string[]
-                            {
+                                }));
+                                isMS.Add(string.Concat(new string[]
+                                {
                                 "MS No"
-                            }));
+                                }));
+                            }
                         }
                     }
+                    Abilities = tdata[3];
+                    PokedexList[num].Abilities = tdata[3];
+                    PokedexListUpdated?.Invoke();
                 }
-                Abilities = tdata[3];
-                PokedexList[num].Abilities = tdata[3];
-                PokedexListUpdated?.Invoke();
                 // Pokedex Informations, not done bcoz i'm lazy.
                 /* If you wanna do it :
                  * [0] : ID 

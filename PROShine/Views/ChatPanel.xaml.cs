@@ -42,9 +42,6 @@ namespace PROShine
                 (sender as RichTextBox).CaretPosition = (sender as RichTextBox).Document.ContentEnd;
                 (sender as RichTextBox).ScrollToEnd();
             }
-#if DEBUG
-            Console.WriteLine((sender as RichTextBox).Document.Blocks.Count.ToString());
-#endif
             //Removing some messages to prevent lag.
             //TextRange range = new TextRange((sender as RichTextBox).Document.ContentStart, (sender as RichTextBox).Document.ContentEnd); //To get the richtextbox texts.
             //if (range.Text.Length > 12000)//Richtextbox text length

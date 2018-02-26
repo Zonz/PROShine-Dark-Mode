@@ -50,9 +50,8 @@
             {
                 if (_requestedResync)
                 {
-                    _bot.LogMessage("Bot still stuck, stopping the script.", System.Windows.Media.Brushes.OrangeRed);
-                    _bot.Stop();
-                    _bot.Relog(5);
+                    _bot.NeedResync = true;
+                    _bot.LogMessage("Bot still stuck, commencing random movement.", System.Windows.Media.Brushes.OrangeRed);
                 }
                 else
                 {
@@ -76,6 +75,7 @@
         public void Reset()
         {
             _requestedResync = false;
+            _bot.NeedResync = false;
             _lastMovementSourceX = -1;
         }
     }
