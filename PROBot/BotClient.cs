@@ -66,6 +66,8 @@ namespace PROBot
         public bool BeAwareOfStaff { get; set; }
 
         public bool NeedResync;
+
+        public bool StartScriptInstant;
         public BotClient()
         {
             AccountManager = new AccountManager("Accounts");
@@ -84,6 +86,7 @@ namespace PROBot
             callsTime();
             BeAwareOfStaff = false;
             NeedResync = false;
+            StartScriptInstant = false;
         }
 
         public void CancelInvokes()
@@ -272,6 +275,14 @@ namespace PROBot
                 _loginRequested = false;
                 return;
             }
+            if (StartScriptInstant && Running != State.Started && Game != null & Script != null)
+            {
+                if (Game.IsMapLoaded && Game.AreNpcReceived && Game.IsInactive)
+                {
+                    Start();
+                    StartScriptInstant = false;
+                }
+            }
 
             if (Running != State.Started)
             {
@@ -294,6 +305,7 @@ namespace PROBot
                 Running = State.Started;
                 StateChanged?.Invoke(Running);
                 Script.Start();
+                StartScriptInstant = false;
             }
         }
 

@@ -1,11 +1,17 @@
-﻿using Microsoft.Win32;
+﻿using FontAwesome.WPF;
+using Microsoft.Win32;
 using PROBot;
+using PROBot.Modules;
 using PROProtocol;
 using PROShine.Views;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Media;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -13,16 +19,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
-using PROBot.Modules;
-using FontAwesome.WPF;
 using System.Windows.Documents;
-using MahApps.Metro.Controls;
-using System.Linq;
+using System.Windows.Input;
 using System.Windows.Interop;
-using System.Media;
+using System.Windows.Media;
 
 namespace PROShine
 {
@@ -37,7 +37,7 @@ namespace PROShine
         public MapView Map { get; private set; }
         public TradeView Trade { get; private set; }
         public List<Pokedex> items = new List<Pokedex>();
-
+        public string[] ArgsCommands = new string[15];
         private struct TabView
         {
             public UserControl View;
@@ -63,6 +63,7 @@ namespace PROShine
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 #endif
+
             Thread.CurrentThread.Name = "UI Thread";
 
             Bot = new BotClient();
@@ -86,7 +87,6 @@ namespace PROShine
             AutoReconnectSwitch.IsChecked = Bot.AutoReconnector.IsEnabled;
             AvoidStaffSwitch.IsChecked = Bot.StaffAvoider.IsEnabled;
             AutoEvolveSwitch.IsChecked = Bot.PokemonEvolver.IsEnabled;
-
             App.InitializeVersion();
 
             Team = new TeamView(Bot);
@@ -132,23 +132,66 @@ namespace PROShine
             money2.Foreground = Brushes.OrangeRed;
             money2.Text = string.Format("Money: {0}", "?");
             toolTipMoney2.Children.Add(money2);
+
+            ArgsCommands = Environment.GetCommandLineArgs();
+            ArgsCommandsProcess(ArgsCommands);
         }
+
+        private void ArgsCommandsProcess(string[] argsCommands)
+        {
+            try
+            {
+                if (argsCommands.Length == 0)
+                    return;
+
+                if (argsCommands.Length > 1)
+                {
+                    ArrayList commands = new ArrayList();
+                    foreach (var command in argsCommands)
+                    {
+                        commands.Add(command);
+                    }
+                    commands.RemoveAt(0);
+                    string perfectCommand = commands[0].ToString();
+                    if (commands.Count > 0)
+                    {
+                        for (int i = 1; i <= commands.Count - 1; i++)
+                        {
+                            commands[i] = " " + commands[i];
+                            perfectCommand += commands[i];
+                        }
+                    }
+                    string[] commandSplit = perfectCommand.Split('`');
+                    Login(commandSplit[0], commandSplit[1], commandSplit[2], commandSplit[3]);
+                }
+                else
+                    LogMessage($"Args command usage: { App.Name } Username`Password`Server`Script file location (Avoid this char '`' from your script loaction and name)", Brushes.AntiqueWhite);
+            }
+            catch (Exception ex)
+            {
+                LogMessage(ex.Message, Brushes.OrangeRed);
+            }           
+        }
+
         private void PlayShoutNotification()
         {
-            Window mainWindow = GetWindow(this);
-            if (!mainWindow.IsActive || !mainWindow.IsVisible)
+            Dispatcher.InvokeAsync(delegate
             {
-                IntPtr handle = new WindowInteropHelper(mainWindow).Handle;
-                FlashWindowHelper.Flash(handle);
-
-                if (File.Exists("Assets/shout.wav"))
+                Window mainWindow = GetWindow(this);
+                if (!mainWindow.IsActive || !mainWindow.IsVisible)
                 {
-                    using (SoundPlayer player = new SoundPlayer("Assets/shout.wav"))
+                    IntPtr handle = new WindowInteropHelper(mainWindow).Handle;
+                    FlashWindowHelper.Flash(handle);
+
+                    if (File.Exists("Assets/shout.wav"))
                     {
-                        player.Play();
+                        using (SoundPlayer player = new SoundPlayer("Assets/shout.wav"))
+                        {
+                            player.Play();
+                        }
                     }
                 }
-            }
+            });
         }
         private void Bot_ColorMessageLogged(string message, Brush color)
         {
@@ -344,6 +387,14 @@ namespace PROShine
             LogMessage("Connecting to the server...", Brushes.SeaGreen);
             LoginButton.IsEnabled = false;
             LoginMenuItem.IsEnabled = false;
+            Login(login);
+        }
+        /// <summary>
+        /// Login to the server manually.
+        /// </summary>
+        /// <param name="login"></param>
+        private void Login(LoginWindow login)
+        {
             Account account = new Account(login.Username);
             lock (Bot)
             {
@@ -361,7 +412,31 @@ namespace PROShine
                 Bot.Login(account);
             }
         }
-
+        /// <summary>
+        /// Login to server by args commands.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="passWord"></param>
+        /// <param name="server"></param>
+        /// <param name="script"></param>
+        private void Login(string userName, string passWord = "", string server = "", string script = "")
+        {
+            Account account = null;
+            passWord = passWord.Replace(" ", string.Empty);
+            userName = userName.Replace(" ", string.Empty);
+            lock (Bot)
+            {
+                foreach (var acc in Bot.AccountManager.Accounts)
+                {
+                    if (acc.Value.Name.ToLowerInvariant() == userName.ToLowerInvariant())
+                        account = acc.Value;
+                }
+                account.Password = passWord != "" ? passWord : account.Password;
+                account.Server = server != "" ? server : account.Server;
+                Bot.Login(account);
+                LoadScript(script, true);
+            }
+        }
         private void LogoutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Logout();
@@ -381,7 +456,7 @@ namespace PROShine
             LoadScript();
         }
 
-        private void LoadScript(string filePath = null)
+        private void LoadScript(string filePath = null, bool startScriptInstant = false)
         {
             if (filePath == null)
             {
@@ -421,6 +496,7 @@ namespace PROShine
                         LogMessage(Bot.Script.Description);
                     }
                     UpdateBotMenu();
+                    Bot.StartScriptInstant = startScriptInstant;
                 }
             }
             catch (Exception ex)
@@ -591,10 +667,10 @@ namespace PROShine
                     stateText = "stopped";
                     StartScriptButtonIcon.Icon = FontAwesome.WPF.FontAwesomeIcon.Play;
                 }
-                if(stateText == "started")
+                if (stateText == "started")
                 { LogMessage("Bot " + stateText, Brushes.SeaGreen); }
                 else
-                { LogMessage("Bot " + stateText, Brushes.Red); }               
+                { LogMessage("Bot " + stateText, Brushes.Red); }
             });
         }
 
@@ -944,7 +1020,7 @@ namespace PROShine
                 });
             }
         }
-        
+
         private void Client_ShopOpened(Shop shop)
         {
             Dispatcher.InvokeAsync(delegate
@@ -1197,11 +1273,11 @@ namespace PROShine
                     SpawnList.Children.Clear();  // Clearing the spawn list before adding new one.
                     pkmns.ForEach(delegate (PokemonSpawn pkmn)
                     {
-                    /* Captured : http://fontawesome.io/icon/check/ | Not : http://fontawesome.io/icon/times/ truth is it wasn't used xD
-                    * MSOnly : http://fontawesome.io/icon/certificate/
-                    * SURF : http://fontawesome.io/icon/ship/ | GROUND : http://fontawesome.io/icon/globe/
-                    * MAY HOLD AN ITEM : http://fontawesome.io/icon/wrench/
-                    */
+                        /* Captured : http://fontawesome.io/icon/check/ | Not : http://fontawesome.io/icon/times/ truth is it wasn't used xD
+                        * MSOnly : http://fontawesome.io/icon/certificate/
+                        * SURF : http://fontawesome.io/icon/ship/ | GROUND : http://fontawesome.io/icon/globe/
+                        * MAY HOLD AN ITEM : http://fontawesome.io/icon/wrench/
+                        */
 
                         DockPanel d = new DockPanel();
                         TextBlock Name = new TextBlock();
@@ -1358,7 +1434,7 @@ namespace PROShine
                 items.Clear();
                 PokedexList.ItemsSource = null;
                 PokedexList.Items.Refresh();
-                foreach(var pk in Bot.Game.PokedexList)
+                foreach (var pk in Bot.Game.PokedexList)
                 {
                     pk.Area.Clear();
                 }
