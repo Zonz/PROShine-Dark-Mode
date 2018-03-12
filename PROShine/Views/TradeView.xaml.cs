@@ -63,7 +63,7 @@ namespace PROShine.Views
         private void AcceptTrade_Click(object sender, RoutedEventArgs e)
         {
             string applicant = tradeApplicant.Text;
-            _bot.Game.SendPacket("mb|.|/trade " + applicant);
+            _bot.Game.SendAcceptTrade(applicant);
             this.Dispatcher.Invoke(() =>
             {
                 if (teamToTrade.Children.Count < _bot.Game.Team.Count) { InitTeam(); }
@@ -166,7 +166,7 @@ namespace PROShine.Views
 
         public void StatusReset()
         {
-            Dispatcher.Invoke(() =>
+            this.Dispatcher.Invoke(() =>
             {
                 First_list.SetValue(BorderBrushProperty, Brushes.Silver);
                 First_list.BorderThickness = new Thickness(1);
@@ -177,7 +177,8 @@ namespace PROShine.Views
 
         public void ChangeToFinalView()
         {
-            Dispatcher.Invoke(() =>
+
+            this.Dispatcher.Invoke(() =>
             {
                 TradeControls.Visibility = Visibility.Collapsed;
                 teamToTrade.Visibility = Visibility.Collapsed;

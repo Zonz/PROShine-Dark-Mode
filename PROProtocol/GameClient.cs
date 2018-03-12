@@ -1397,9 +1397,6 @@ namespace PROProtocol
 					OnPCBox(data);
 					break;
 				case "k":
-					isSpawnListThingStarted = false;
-					if (!isCrrentMap && isRequestingForSpawnCheck && !isRequestingForCurrentSpawnCheck)
-						AnotherMapLoadPokemons(data);
 					LoadPokemons(data);
 					break;
 				case "p":
@@ -1435,7 +1432,10 @@ namespace PROProtocol
 					break;
 			}
 		}
-
+		public void SendAcceptTrade(string applicant)
+		{
+			SendPacket("mb|.|/trade " + applicant);
+		}
 		public bool DisableTeamInspection()
 		{
 			IsTeamInspectionEnabled = false;
