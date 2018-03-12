@@ -591,13 +591,12 @@ namespace PROBot
                 message += " [WARNING, different map] /!\\";
                 bool flagTele = map.ToLowerInvariant().Contains("pokecenter") ? false : true;
                 bool anotherFlagTele = map.ToLowerInvariant().Contains("player") ? false : true;
-                int npcC = Rand.Next(0, Game.Map.Npcs.Count - 1);
                 if (flagTele && anotherFlagTele && Game.PreviousMapBeforeTeleport != Game.MapName && countGMTele >= 2)
                 {
                     if (BeAwareOfStaff)
                     {
-                        messageProcess = sendTime(5);
-                        MoveToCell(Game.Map.Npcs[npcC].PositionX, Game.Map.Npcs[npcC].PositionY, GameClient.DistanceBetween(Game.PlayerX, Game.PlayerY, Game.Map.Npcs[npcC].PositionX, Game.Map.Npcs[npcC].PositionY) - 1);
+                        NeedResync = true;
+                        messageProcess = sendTime(5);                       
                     }
                     PlayShoutNotification?.Invoke();                   
                     countGMTele = 0;
@@ -608,8 +607,8 @@ namespace PROBot
                     PlayShoutNotification?.Invoke();
                     if (BeAwareOfStaff)
                     {
-                        messageProcess = sendTime(5);
-                        MoveToCell(Game.Map.Npcs[npcC].PositionX, Game.Map.Npcs[npcC].PositionY, GameClient.DistanceBetween(Game.PlayerX, Game.PlayerY, Game.Map.Npcs[npcC].PositionX, Game.Map.Npcs[npcC].PositionY) - 1);
+                        NeedResync = true;
+                        messageProcess = sendTime(5);                      
                     }
                 }
             }

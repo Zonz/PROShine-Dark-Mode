@@ -50,8 +50,11 @@
             {
                 if (_requestedResync)
                 {
-                    _bot.NeedResync = true;
-                    _bot.LogMessage("Bot still stuck, commencing random movement.", System.Windows.Media.Brushes.OrangeRed);
+                    _bot.LogMessage("Bot still stuck.", System.Windows.Media.Brushes.OrangeRed);
+                    if(_bot.Account.Socks.Version != SocksVersion.None)
+                        _bot.Relog(5, "Relogging since the bot is stuck", true);
+                    else
+                        _bot.Relog(5, "Relogging since the bot is stuck", false);
                 }
                 else
                 {
