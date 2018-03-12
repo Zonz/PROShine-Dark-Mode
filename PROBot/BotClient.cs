@@ -52,7 +52,11 @@ namespace PROBot
 
         private DateTime AfterMessageProcess;
 
+        private DateTime TeleportationCheck;
+
         private bool _loginRequested;
+
+        private bool _teleportCheckRequested;
 
         private ProtocolTimeout _actionTimeout = new ProtocolTimeout();
         
@@ -123,7 +127,7 @@ namespace PROBot
                         }
                     }
                 }
-                if (DateTime.UtcNow > AfterMessageProcess && messageProcess && BeAwareOfStaff)
+                if (AfterMessageProcess < DateTime.UtcNow && messageProcess && BeAwareOfStaff)
                 {
                     if (Game != null)
                     {
@@ -131,6 +135,21 @@ namespace PROBot
                         Logout(false);
                     }
                     messageProcess = false;
+                }
+
+                if(_teleportCheckRequested)
+                {
+                    if (TeleportationCheck < DateTime.UtcNow)
+                    {
+                        if (!Game.IsInBattle)
+                        {
+                            PlayShoutNotification?.Invoke();
+                            PauseScript(5.5f);
+                            LogMessage("Bot got teleported twice or more than twice please check. This can be a GM/Admin/Mod teleport.", Brushes.OrangeRed);
+                            countGMTele = 0;
+                        }
+                        _teleportCheckRequested = false;
+                    }
                 }
             }
         }
@@ -269,6 +288,7 @@ namespace PROBot
 
             CallInvokes();
             AutoReconnector.Update();
+
             if (_loginRequested)
             {
                 LoginUpdate();
@@ -626,10 +646,7 @@ namespace PROBot
                     countGMTele++;
                     if(countGMTele > 2)
                     {
-                        PlayShoutNotification?.Invoke();
-                        PauseScript(5.5f);
-                        LogMessage("Bot got teleported twice or more than twice please check. This can be a GM/Admin/Mod teleport.", Brushes.OrangeRed);
-                        countGMTele = 0;
+                        CheckTeleportion(1f);
                     }
                 }
             }
@@ -706,6 +723,12 @@ namespace PROBot
             scriptPauserTime = DateTime.UtcNow.AddSeconds(seconds);
             Pause();
             CallingPaueScript = true;
+        }
+
+        private void CheckTeleportion(float seconds)
+        {
+            TeleportationCheck = DateTime.UtcNow.AddSeconds(seconds);
+            _teleportCheckRequested = true;
         }
     }
 }
