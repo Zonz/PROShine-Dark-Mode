@@ -127,7 +127,7 @@ namespace PROProtocol
 		public List<TradePokemon> Second_Trade;
 		#endregion
 
-		private const string Version = "2018V";
+		private const string Version = "2018M";
 
 		private GameConnection _connection;
 		private DateTime _lastMovement;
@@ -1250,7 +1250,7 @@ namespace PROProtocol
 			OpenedShop = null;
 			IsPCOpen = false;
 			// DSSock.sendMove
-			SendPacket("/|.|" + direction);
+			SendPacket("#|.|" + direction);
 		}
 
 		private void SendAttack(string number)
@@ -1370,7 +1370,7 @@ namespace PROProtocol
 				case "h":
 					OnEvolving(data);
 					break;
-				case "u":
+				case "-":
 					OnUpdatePlayer(data);
 					break;
 				case "c":

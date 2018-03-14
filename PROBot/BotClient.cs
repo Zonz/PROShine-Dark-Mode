@@ -21,6 +21,7 @@ namespace PROBot
         public BattleAI AI { get; private set; }
         public BaseScript Script { get; private set; }
         public AccountManager AccountManager { get; private set; }
+        public event Action<bool> RelogCalling;
         public Random Rand { get; private set; }
         public Account Account { get; set; }
 
@@ -110,11 +111,15 @@ namespace PROBot
                     if (Script.Invokes[i].Time < DateTime.UtcNow)
                     {
                         if (Script.Invokes[i].Called)
+                        {
                             Script.Invokes.RemoveAt(i);
+                            RelogCalling?.Invoke(false);
+                        }
                         else
+                        {
                             Script.Invokes[i].Call();
-
-                        AutoReconnector.RelogCalled = false;
+                            RelogCalling?.Invoke(true);
+                        }
                     }
                 }
                 if (CallingPaueScript)
@@ -137,20 +142,6 @@ namespace PROBot
                     messageProcess = false;
                 }
 
-                if(_teleportCheckRequested)
-                {
-                    if (TeleportationCheck < DateTime.UtcNow)
-                    {
-                        if (!Game.IsInBattle)
-                        {
-                            PlayShoutNotification?.Invoke();
-                            PauseScript(5.5f);
-                            LogMessage("Bot got teleported twice or more than twice please check. This can be a GM/Admin/Mod teleport.", Brushes.OrangeRed);
-                            countGMTele = 0;
-                        }
-                        _teleportCheckRequested = false;
-                    }
-                }
             }
         }
         private void callsTime()
@@ -286,6 +277,20 @@ namespace PROBot
             if (Script != null)
                 Script.Update();
 
+            if (_teleportCheckRequested)
+            {
+                if (TeleportationCheck < DateTime.UtcNow)
+                {
+                    if (!Game.IsInBattle)
+                    {
+                        PlayShoutNotification?.Invoke();
+                        PauseScript(5.5f);
+                        LogMessage("Bot got teleported twice or more than twice please check. This can be a GM/Admin/Mod teleport.", Brushes.OrangeRed);
+                        countGMTele = 0;
+                    }
+                    _teleportCheckRequested = false;
+                }
+            }
             CallInvokes();
             AutoReconnector.Update();
 

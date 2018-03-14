@@ -26,13 +26,19 @@ namespace PROBot.Modules
 
         private BotClient _bot;
         public bool _reconnecting;
-        public bool RelogCalled { get; set; }
+        private bool RelogCalled;
         private DateTime _autoReconnectTimeout;
 
         public AutoReconnector(BotClient bot)
         {
             _bot = bot;
             _bot.ClientChanged += Bot_ClientChanged;
+            _bot.RelogCalling += Bot_RelogCalling;
+        }
+
+        private void Bot_RelogCalling(bool value)
+        {
+            RelogCalled = value;
         }
 
         private void Bot_ClientChanged()

@@ -479,7 +479,6 @@ namespace PROBot.Scripting
             LogMessage(message);
             Bot.Stop();
             Bot.Logout(false);
-            Bot.CancelInvokes();
         }
 
         // API for Relog API
@@ -3118,8 +3117,7 @@ namespace PROBot.Scripting
             }
 
             Invoke(_lua.Globals.Get("startScript"), seconds + 10);
-            Bot.AutoReconnector._reconnecting = false;
-            Bot.AutoReconnector.RelogCalled = true;
+
             if (!autoReconnect)
             {
                 if (Bot.Account.Socks.Version != SocksVersion.None)
