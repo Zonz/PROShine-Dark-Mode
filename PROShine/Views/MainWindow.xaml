@@ -117,7 +117,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
         <SolidColorBrush x:Key="CheckedBlueBorder" Color="#FF7289da" />
         <Style x:Key="SwitchStyle" TargetType="{x:Type CheckBox}">
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
@@ -339,14 +339,20 @@
                     </ToolTip>
                 </CheckBox.ToolTip>
             </CheckBox>
+            <CheckBox x:Name="IsTrainerBattlesActiveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="NPC-Battle: " Checked="IsTrainerBattlesActiveSwitch_Checked" Unchecked="IsTrainerBattlesActiveSwitch_Unchecked" IsChecked="True" Foreground="#FF99aab5">
+                <CheckBox.ToolTip>
+                    <ToolTip Background="#2c2f33">
+                        <TextBlock Background="#2c2f33" Foreground="#99aab5"><Run Text="Enables/Disables automatic battling with NPCs"/></TextBlock>
+                    </ToolTip>
+                </CheckBox.ToolTip>
+            </CheckBox>
             <Button
-                Width="96"
+                Width="20"
                 Height="26"
-                Content="Show Options"
+                Content=">"
                 Name="OptionsButton"
-                Visibility="Collapsed"
                 Click="Options_Click"
-                Margin="10,1,2,1"/>
+                Margin="10,1,2,1" Visibility="Collapsed"/>
             <ItemsControl Name="OptionSliders" Visibility="Collapsed">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -355,9 +361,11 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox HorizontalAlignment="Left" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="{Binding Name}" IsChecked="{Binding IsEnabled}">
+                        <CheckBox HorizontalAlignment="Left" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="{Binding Name}" IsChecked="{Binding IsEnabled}" Foreground="#FF99aab5">
                             <CheckBox.ToolTip>
-                                <TextBlock Text="{Binding Description}"/>
+                                <ToolTip Background="#2c2f33">
+                                    <TextBlock Background="#2c2f33" Foreground="#99aab5" Text="{Binding Description}"/>
+                                </ToolTip>
                             </CheckBox.ToolTip>
                         </CheckBox>
                     </DataTemplate>
@@ -371,24 +379,22 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid ToolTip="{Binding Description}">
+                        <Grid Background="Transparent">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="{Binding Name}"/>
-                            <TextBox Grid.Column="1" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyDown="TextBox_KeyDown" MinWidth="50"/>
+                            <Grid.ToolTip>
+                                <ToolTip Background="#2c2f33">
+                                    <TextBlock Background="#2c2f33" Foreground="#99aab5" Text="{Binding Description}"/>
+                                </ToolTip>
+                            </Grid.ToolTip>
+                            <Label Background="Transparent" Foreground="#FF99aab5" Grid.Column="0" Content="{Binding Name}"/>
+                            <TextBox Background="#2c2f33" Foreground="#FF99aab5" Grid.Column="1" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyDown="TextBox_KeyDown" MinWidth="50"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <CheckBox x:Name="IsTrainerBattlesActiveSwitch" Style="{StaticResource SwitchStyle}" Margin="2,1,2,1" Content="NPC-Battle: " Checked="IsTrainerBattlesActiveSwitch_Checked" Unchecked="IsTrainerBattlesActiveSwitch_Unchecked" IsChecked="True" Foreground="#FF99aab5">
-                <CheckBox.ToolTip>
-                    <ToolTip Background="#2c2f33">
-                        <TextBlock Background="#2c2f33" Foreground="#99aab5"><Run Text="Enables/Disables to battle with NPC"/></TextBlock>
-                    </ToolTip>
-                </CheckBox.ToolTip>
-            </CheckBox>
         </WrapPanel>
         <Grid Grid.Row="2" Name="Main">
             <Grid.ColumnDefinitions>

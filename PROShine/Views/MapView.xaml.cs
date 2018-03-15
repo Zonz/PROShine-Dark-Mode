@@ -28,6 +28,7 @@ namespace PROShine.Views
         private Shape[] _npcs;
         private bool _arePlayersDirty;
         private Shape[] _otherPlayers;
+        private Shape _selectedSquare;
 
         private Point _lastDisplayedCell = new Point(-1, -1);
         private Point _playerPosition = new Point();
@@ -58,6 +59,13 @@ namespace PROShine.Views
             IsVisibleChanged += MapView_IsVisibleChanged;
             MouseDown += MapView_MouseDown;
             SizeChanged += MapView_SizeChanged;
+
+            _selectedSquare = new Rectangle
+            {
+                Stroke = Brushes.Red,
+                Fill = Brushes.Transparent,
+                StrokeThickness = 1
+            };
         }
 
         private void MapCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -105,13 +113,15 @@ namespace PROShine.Views
 
             if (_lastDisplayedCell.X != ingameX || _lastDisplayedCell.Y != ingameY)
             {
+                Canvas.SetLeft(_selectedSquare, (ingameX + deltaX) * _cellWidth);
+                Canvas.SetTop(_selectedSquare, (ingameY + deltaY) * _cellWidth);
                 lock (_bot)
                 {
                     if (_bot.Game != null && _bot.Game.IsMapLoaded)
-                    {
                         RetrieveCellInfo(ingameX, ingameY);
-                        FloatingTip.IsOpen = true;
-                    }
+                    else
+                        TipText.Text = $"Cell: ({ingameX},{ingameY})";
+                    FloatingTip.IsOpen = true;
                 }
             }
 
@@ -323,6 +333,10 @@ namespace PROShine.Views
                 RefreshPlayer(false);
                 RefreshNpcs();
                 RefreshOtherPlayers();
+
+                _selectedSquare.Width = _cellWidth;
+                _selectedSquare.Height = _cellWidth;
+                MapCanvas.Children.Add(_selectedSquare);
             }
         }
 

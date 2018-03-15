@@ -20,6 +20,7 @@
                 <ListView.ItemContainerStyle>
                     <Style>
                         <Setter Property="ToolTipService.ShowDuration" Value="60000"/>
+                        <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
                         <Setter Property="Control.ToolTip">
                             <Setter.Value>
                                 <Canvas Height="300" Width="430" Background="#FF1F2225">
@@ -102,12 +103,172 @@
                                             <TextBlock Text="SPDEF:" Canvas.Top="81" Canvas.Left="3" FontSize="15" Foreground="#ffffff"/>
                                             <TextBlock Text="HP:" Canvas.Top="101" Canvas.Left="3" FontSize="15" Foreground="#ffffff"/>
 
-                                            <TextBlock Text="{Binding Stats.Attack}" Canvas.Right="52" FontSize="15" Foreground="#ffffff"/>
-                                            <TextBlock Text="{Binding Stats.Defence}" Canvas.Top="21" Canvas.Right="52" FontSize="15" Foreground="#ffffff"/>
-                                            <TextBlock Text="{Binding Stats.Speed}" Canvas.Top="41" Canvas.Right="52" FontSize="15" Foreground="#ffffff"/>
-                                            <TextBlock Text="{Binding Stats.SpAttack}" Canvas.Top="61" Canvas.Right="52" FontSize="15" Foreground="#ffffff"/>
-                                            <TextBlock Text="{Binding Stats.SpDefence}" Canvas.Top="81" Canvas.Right="52" FontSize="15" Foreground="#ffffff"/>
-                                            <TextBlock Text="{Binding Stats.Health}" Canvas.Top="101" Canvas.Right="52" FontSize="15" Foreground="#ffffff"/>
+                                            <TextBlock Text="{Binding Stats.Attack}" Canvas.Right="52" FontSize="15">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Adamant">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Brave">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Lonely">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Naughty">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Bold">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Calm">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Modest">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Timid">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Stats.Defence}" Canvas.Top="21" Canvas.Right="52" FontSize="15">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Bold">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Impish">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Lax">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Relaxed">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Gentle">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Hasty">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Lonely">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Mild">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Stats.Speed}" Canvas.Top="41" Canvas.Right="52" FontSize="15">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Hasty">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Jolly">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Naive">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Timid">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Brave">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Quiet">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Relaxed">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Sassy">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Stats.SpAttack}" Canvas.Top="61" Canvas.Right="52" FontSize="15">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Mild">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Modest">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Quiet">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Rash">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Adamant">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Careful">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Impish">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Jolly">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Stats.SpDefence}" Canvas.Top="81" Canvas.Right="52" FontSize="15">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Calm">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Careful">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Gentle">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Sassy">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Lax">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Naive">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Naughty">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Nature.Name}" Value="Rash">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Stats.Health}" Canvas.Top="101" Canvas.Right="52" FontSize="15" Foreground="White"/>
 
                                             <TextBlock Text="{Binding IV.Attack}" Canvas.Right="33" FontSize="15" Foreground="#D48600"/>
                                             <TextBlock Text="{Binding IV.Defence}" Canvas.Top="21" Canvas.Right="33" FontSize="15" Foreground="#D48600"/>

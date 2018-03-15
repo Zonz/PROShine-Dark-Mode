@@ -207,7 +207,7 @@ namespace PROShine
             {
                 if (_sliderOptions.Count == 1 && _textOptions.Count == 0)
                 {
-                    OptionsButton.Content = "Show Options";
+                    OptionsButton.Content = ">";
                     OptionsButton.Visibility = Visibility.Collapsed;
                     OptionSliders.Visibility = Visibility.Collapsed;
                     TextOptions.Visibility = Visibility.Collapsed;
@@ -224,7 +224,7 @@ namespace PROShine
             {
                 if (_textOptions.Count == 1 && _sliderOptions.Count == 0)
                 {
-                    OptionsButton.Content = "Show Options";
+                    OptionsButton.Content = ">";
                     OptionsButton.Visibility = Visibility.Collapsed;
                     OptionSliders.Visibility = Visibility.Collapsed;
                     TextOptions.Visibility = Visibility.Collapsed;
@@ -239,13 +239,13 @@ namespace PROShine
         {
             if (OptionSliders.Visibility == Visibility.Collapsed)
             {
-                OptionsButton.Content = "Hide Options";
+                OptionsButton.Content = "<";
                 OptionSliders.Visibility = Visibility.Visible;
                 TextOptions.Visibility = Visibility.Visible;
             }
             else
             {
-                OptionsButton.Content = "Show Options";
+                OptionsButton.Content = ">";
                 OptionSliders.Visibility = Visibility.Collapsed;
                 TextOptions.Visibility = Visibility.Collapsed;
             }
@@ -482,7 +482,7 @@ namespace PROShine
                     _textOptions.Clear();
                     OptionSliders.Items.Refresh();
                     TextOptions.Items.Refresh();
-                    OptionsButton.Content = "Show Options";
+                    OptionsButton.Content = ">";
                     OptionsButton.Visibility = Visibility.Collapsed;
                     OptionSliders.Visibility = Visibility.Collapsed;
                     TextOptions.Visibility = Visibility.Collapsed;
@@ -523,6 +523,7 @@ namespace PROShine
             lock (Bot)
             {
                 Bot.Stop();
+                Bot.CancelInvokes();
             }
         }
 
