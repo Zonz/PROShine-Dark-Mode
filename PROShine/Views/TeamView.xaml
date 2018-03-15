@@ -23,14 +23,91 @@
                         <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
                         <Setter Property="Control.ToolTip">
                             <Setter.Value>
-                                <Canvas Height="300" Width="430" Background="#FF1F2225">
+                                <Canvas Height="300" Width="430">
+                                    <Canvas.Style>
+                                        <Style TargetType="Canvas">
+                                            <Setter Property="Background" Value="#FF1F2225"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsShiny}" Value="True">
+                                                    <Setter Property="Background" Value="#e5cf52"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Canvas.Style>
+                                    
                                     <!-- Header -->
-                                    <TextBlock Canvas.Top="5" Canvas.Left="10" Text="{Binding Name}" FontSize="18" FontWeight="ExtraBold" Foreground="#ffffff"/>
-                                    <TextBlock Canvas.Top="8" Canvas.Left="184" Text="{Binding Gender}"  FontSize="15" Foreground="#ffffff"/>
-                                    <TextBlock Canvas.Top="8" Canvas.Left="237" Text="Level:" FontSize="15" Foreground="#ffffff"/>
-                                    <TextBlock Canvas.Top="8" Canvas.Left="279" Text="{Binding Experience.CurrentLevel}" FontSize="15" Foreground="White"/>
-                                    <TextBlock Canvas.Top="8" Canvas.Left="324" Text="Id:" FontSize="15" Foreground="#ffffff"/>
-                                    <TextBlock Canvas.Top="8" Canvas.Left="345" Text="{Binding Id}" FontSize="15" Foreground="White"/>
+                                    <TextBlock Canvas.Top="5" Canvas.Left="10" Text="{Binding Name}" FontSize="18" FontWeight="ExtraBold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsShiny}" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>                                        
+                                    </TextBlock>
+                                    <TextBlock Canvas.Top="8" Canvas.Left="184" Text="{Binding Gender}"  FontSize="15">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsShiny}" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Canvas.Top="8" Canvas.Left="237" Text="Level:" FontSize="15">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsShiny}" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Canvas.Top="8" Canvas.Left="279" Text="{Binding Experience.CurrentLevel}" FontSize="15">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsShiny}" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Canvas.Top="8" Canvas.Left="324" Text="Id:" FontSize="15">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsShiny}" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Canvas.Top="8" Canvas.Left="345" Text="{Binding Id}" FontSize="15">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsShiny}" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
 
                                     <!-- Main -->
                                     <Canvas Canvas.Top="30" Canvas.Left="10" Width="410" Height="260" Background="#2c2f33">
