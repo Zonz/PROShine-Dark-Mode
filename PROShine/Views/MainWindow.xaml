@@ -207,6 +207,12 @@
             </Setter>
         </Style>
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="New" Executed="ReloadHotKey_Executed" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="R" Modifiers="Control" Command="New"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -225,6 +231,7 @@
                     <MenuItem BorderBrush="{x:Null}" Name="BotStopMenuItem" Header="Stop" IsEnabled="False" Click="BotStopMenuItem_Click" Background="#2c2f33" />
                     <Separator BorderBrush="{x:Null}" Background="White" />
                     <MenuItem BorderBrush="{x:Null}" Name="MenuPathScript" Header="Script: None" Click="MenuPathScript_Click" Background="#2c2f33" Foreground="#99aab5"/>
+                    <MenuItem BorderBrush="{x:Null}" Name="ReloadScriptMenuItem" Header="Reload Script      Ctrl+R" Click="ReloadScript_Click" Background="#2c2f33" Foreground="#99aab5" IsEnabled="False"/>
                     <Separator />
                     <MenuItem BorderBrush="{x:Null}" Header="Show Log View Normally" Background="#2c2f33" Name="HideorShowLOGVIEW" Foreground="#99aab5" Click="HideLOGVIEW_Click"/>
                 </MenuItem>

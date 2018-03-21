@@ -57,6 +57,8 @@ namespace PROShine
 
         private ObservableCollection<OptionSlider> _sliderOptions;
         private ObservableCollection<TextOption> _textOptions;
+        private string _lastLoadedScript;
+
         public MainWindow()
         {
 #if !DEBUG
@@ -497,6 +499,8 @@ namespace PROShine
                     }
                     UpdateBotMenu();
                     Bot.StartScriptInstant = startScriptInstant;
+                    ReloadScriptMenuItem.IsEnabled = true;
+                    _lastLoadedScript = filePath;
                 }
             }
             catch (Exception ex)
@@ -1452,6 +1456,20 @@ namespace PROShine
                     LoadScript(file[0]);
                 }
             }
+        }
+
+        private void ReloadScript_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_lastLoadedScript))
+                return;
+            LoadScript(_lastLoadedScript);
+        }
+
+        private void ReloadHotKey_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_lastLoadedScript))
+                return;
+            LoadScript(_lastLoadedScript);
         }
     }
 }

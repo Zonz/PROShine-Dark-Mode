@@ -186,16 +186,16 @@
                                                         <Setter Property="Foreground" Value="White"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Adamant">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Brave">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Lonely">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Naughty">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Bold">
                                                                 <Setter Property="Foreground" Value="Red"/>
@@ -219,16 +219,16 @@
                                                         <Setter Property="Foreground" Value="White"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Bold">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Impish">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Lax">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Relaxed">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Gentle">
                                                                 <Setter Property="Foreground" Value="Red"/>
@@ -252,16 +252,16 @@
                                                         <Setter Property="Foreground" Value="White"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Hasty">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Jolly">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Naive">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Timid">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Brave">
                                                                 <Setter Property="Foreground" Value="Red"/>
@@ -285,16 +285,16 @@
                                                         <Setter Property="Foreground" Value="White"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Mild">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Modest">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Quiet">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Rash">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Adamant">
                                                                 <Setter Property="Foreground" Value="Red"/>
@@ -318,16 +318,16 @@
                                                         <Setter Property="Foreground" Value="White"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Calm">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Careful">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Gentle">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Sassy">
-                                                                <Setter Property="Foreground" Value="Green"/>
+                                                                <Setter Property="Foreground" Value="#FF15EA15"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Nature.Name}" Value="Lax">
                                                                 <Setter Property="Foreground" Value="Red"/>
